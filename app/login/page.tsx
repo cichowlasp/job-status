@@ -36,8 +36,12 @@ export default function LoginPage() {
 		},
 	});
 
-	const onSubmit = (values: z.infer<typeof loginSchema>) => {
-		login(values);
+	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+		const error = await login(values);
+		if (error) {
+			router.push('/error');
+		}
+		router.push('/private');
 	};
 
 	const onSignUp = () => {

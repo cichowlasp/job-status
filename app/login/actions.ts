@@ -1,9 +1,7 @@
-'use server';
+'use client';
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/client';
 import { loginSchema } from './schema';
 
 export async function login(values: z.infer<typeof loginSchema>) {
@@ -18,10 +16,5 @@ export async function login(values: z.infer<typeof loginSchema>) {
 
 	const { error } = await supabase.auth.signInWithPassword(data);
 
-	if (error) {
-		redirect('/error');
-	}
-
-	revalidatePath('/', 'page');
-	redirect('/private');
+	return error;
 }

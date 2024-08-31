@@ -3,6 +3,7 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/useSupabase';
+import Loading from './Loading';
 
 interface AuthProviderProps {
 	children: React.ReactNode;
@@ -57,6 +58,10 @@ export function AuthProvider(props: AuthProviderProps) {
 		session,
 		user,
 	};
+
+	if (loading) {
+		return <Loading />;
+	}
 
 	return (
 		<AuthContext.Provider value={value}>
