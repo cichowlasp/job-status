@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { createClient } from '@/utils/supabase/server';
-import { loginSchema } from './page';
+import { loginSchema } from './schema';
 
 export async function login(values: z.infer<typeof loginSchema>) {
 	const supabase = createClient();

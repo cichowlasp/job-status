@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
+import { loginSchema } from './schema';
 
 import {
 	Form,
@@ -23,11 +24,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-
-export const loginSchema = z.object({
-	email: z.string().min(2).max(50),
-	password: z.string().min(2).max(50),
-});
 
 export default function LoginPage() {
 	const router = useRouter();
