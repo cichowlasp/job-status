@@ -20,19 +20,24 @@ export default function RootLayout({
 	return (
 		<html
 			suppressHydrationWarning={true}
-			className='w-full h-full'
+			className='w-full h-full max-w-full max-h-full'
 			lang='en'>
 			<body
 				suppressHydrationWarning={true}
-				className={inter.className + ' w-full h-full'}>
+				className={
+					inter.className +
+					' w-full h-full max-w-full max-h-full overflow-hidden'
+				}>
 				<ThemeProvider
 					attribute='class'
 					defaultTheme='system'
 					enableSystem
 					disableTransitionOnChange>
 					<AuthProvider>
-						<Navbar />
-						{children}
+						<div className='w-full h-full max-w-full max-h-full'>
+							<Navbar />
+							{children}
+						</div>
 					</AuthProvider>
 				</ThemeProvider>
 			</body>

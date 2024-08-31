@@ -49,7 +49,7 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div className='w-full h-full flex justify-center items-center'>
+		<div className='w-full max-h-[calc(100%-4rem)] h-full max-w-full flex justify-center items-center'>
 			<Card className='w-[350px]'>
 				<CardHeader>
 					<CardTitle>Login</CardTitle>

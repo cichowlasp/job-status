@@ -46,7 +46,7 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className='w-full h-full flex justify-center items-center'>
+		<div className='l max-h-[calc(100%-4rem)] max-w-full w-full h-full flex justify-center items-center'>
 			<Card className='w-[350px]'>
 				<CardHeader>
 					<CardTitle>Sign up</CardTitle>

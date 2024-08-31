@@ -20,7 +20,7 @@ function Navbar() {
 	const router = useRouter();
 
 	return (
-		<nav className='w-full h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
+		<nav className='w-full max-w-full overflow-hidden h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
 			<Button className='pl-0' variant='link'>
 				<Link className='text-xl' href={!data?.user ? '/' : 'private'}>
 					Job status
@@ -28,18 +28,51 @@ function Navbar() {
 			</Button>
 			<div className='flex gap-4'>
 				{!data?.user ? (
-					<div className='flex gap-4'>
-						<Button variant='outline'>
-							<Link className='text-md min-w-16' href='/login'>
-								Login
-							</Link>
-						</Button>
-						<Button>
-							<Link className='text-md min-w-16' href='/register'>
-								Register
-							</Link>
-						</Button>
-					</div>
+					<>
+						<div className='hidden sm:flex gap-4'>
+							<Button variant='outline'>
+								<Link
+									className='text-md min-w-16'
+									href='/login'>
+									Login
+								</Link>
+							</Button>
+							<Button>
+								<Link
+									className='text-md min-w-16'
+									href='/register'>
+									Register
+								</Link>
+							</Button>
+						</div>
+						<div className='flex sm:hidden'>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button size='icon'>
+										<CircleUserRound className='h-[1.2rem] w-[1.2rem]' />
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align='end'>
+									<DropdownMenuItem
+										onClick={() => router.push('/login')}>
+										<Button
+											className='w-full'
+											variant='outline'>
+											Login
+										</Button>
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										onClick={() =>
+											router.push('/register')
+										}>
+										<Button className='w-full'>
+											Register
+										</Button>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
+					</>
 				) : (
 					<div>
 						<DropdownMenu>
