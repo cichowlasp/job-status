@@ -37,14 +37,10 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	if (
-		!user &&
-		!request.nextUrl.pathname.startsWith('/login') &&
-		!request.nextUrl.pathname.startsWith('/register')
-	) {
+	if (!user && request.nextUrl.pathname.startsWith('/private')) {
 		// no user, potentially respond by redirecting the user to the login page
 		const url = request.nextUrl.clone();
-		url.pathname = '/login';
+		url.pathname = '/';
 		return NextResponse.redirect(url);
 	}
 

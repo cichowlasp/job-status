@@ -1,30 +1,33 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import { CircleUserRound } from 'lucide-react';
+import { CircleUserRound, LogOut } from 'lucide-react';
 import { ThemeSwitcher } from './theme-switch';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useAuth } from './auth-provider';
+import { signOut } from '@/utils/supabase/useSupabase';
+import { useRouter } from 'next/navigation';
 
-async function Navbar() {
-	const supabase = createClient();
-
-	const { data, error } = await supabase.auth.getUser();
-	if (error || !data?.user) {
-		redirect('/login');
-	}
+function Navbar() {
+	const data = useAuth();
+	const router = useRouter();
 
 	return (
 		<nav className='w-full h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
 			<Button variant='link'>
-				<Link
-					className='text-xl'
-					href={error || !data?.user ? '/' : 'private'}>
+				<Link className='text-xl' href={!data?.user ? '/' : 'private'}>
 					Job status
 				</Link>
 			</Button>
 			<div className='flex gap-4'>
-				{error || !data?.user ? (
+				{!data?.user ? (
 					<div className='flex gap-4'>
 						<Button variant='outline'>
 							<Link className='text-md min-w-16' href='/login'>
@@ -39,10 +42,27 @@ async function Navbar() {
 					</div>
 				) : (
 					<div>
-						<Button>
-							<CircleUserRound className='mr-2 h-4 w-4' />
-							{data.user.user_metadata['name']}
-						</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button>
+									<CircleUserRound className='mr-2 h-4 w-4' />
+									{data.user.user_metadata['name']}
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align='end'>
+								<DropdownMenuItem
+									className=''
+									onClick={async () => {
+										await signOut();
+										router.push('/');
+									}}>
+									<Button variant='link'>
+										<LogOut className='mr-2 h-4 w-4' />
+										Logout
+									</Button>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				)}
 				<ThemeSwitcher />

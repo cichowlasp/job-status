@@ -22,6 +22,6 @@ export async function login(values: z.infer<typeof loginSchema>) {
 		redirect('/error');
 	}
 
-	revalidatePath('/', 'layout');
-	redirect('/');
+	revalidatePath('/', 'page');
+	redirect('/private');
 }
