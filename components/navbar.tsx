@@ -21,7 +21,7 @@ function Navbar() {
 
 	return (
 		<nav className='w-full h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
-			<Button variant='link'>
+			<Button className='pl-0' variant='link'>
 				<Link className='text-xl' href={!data?.user ? '/' : 'private'}>
 					Job status
 				</Link>

@@ -1,14 +1,21 @@
-import { redirect } from 'next/navigation';
+'use client';
 
-import { createClient } from '@/utils/supabase/server';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/auth-provider';
 
-export default async function PrivatePage() {
-	const supabase = createClient();
+export default function PrivatePage() {
+	const router = useRouter();
+	const data = useAuth();
 
-	const { data, error } = await supabase.auth.getUser();
-	if (error || !data?.user) {
-		redirect('/login');
+	if (!data?.user) {
+		return router.push('/login');
 	}
 
-	return <p>Hello {`${data.user.user_metadata['name']}`}</p>;
+	return (
+		<section className='p-6'>
+			<h1 className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl'>
+				Hello {`${data.user.user_metadata['name']}`}
+			</h1>
+		</section>
+	);
 }
