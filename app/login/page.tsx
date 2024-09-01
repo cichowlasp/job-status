@@ -24,8 +24,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import { useState } from 'react';
+import Loading from '@/components/Loading';
 
 export default function LoginPage() {
+	const [loading, setLading] = useState(false);
+
 	const router = useRouter();
 
 	const form = useForm<z.infer<typeof loginSchema>>({
@@ -37,10 +41,13 @@ export default function LoginPage() {
 	});
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+		setLading(true);
 		const error = await login(values);
 		if (error) {
+			setLading(false);
 			router.push('/error');
 		}
+		setLading(false);
 		router.push('/private');
 	};
 
@@ -102,7 +109,7 @@ export default function LoginPage() {
 							/>
 							<div className='flex justify-between gap-6'>
 								<Button className='w-full' type='submit'>
-									Login
+									{loading ? <Loading /> : 'Login'}
 								</Button>
 								<Button
 									onClick={onSignUp}
