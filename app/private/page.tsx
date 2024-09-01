@@ -16,7 +16,7 @@ export default function PrivatePage() {
 		<section className='px-6 py-4'>
 			<div className='flex justify-between items-center'>
 				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
-					Dashboard
+					All jobs
 				</h3>
 				<Button>+ Add</Button>
 			</div>
