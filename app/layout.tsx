@@ -25,8 +25,7 @@ export default function RootLayout({
 			<body
 				suppressHydrationWarning={true}
 				className={
-					inter.className +
-					' w-full h-full max-w-full max-h-full overflow-hidden'
+					inter.className + ' w-full h-full max-w-full max-h-full'
 				}>
 				<ThemeProvider
 					attribute='class'
@@ -34,10 +33,8 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange>
 					<AuthProvider>
-						<div className='w-full h-full max-w-full max-h-full'>
-							<Navbar />
-							{children}
-						</div>
+						<Navbar />
+						{children}
 					</AuthProvider>
 				</ThemeProvider>
 			</body>
