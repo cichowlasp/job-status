@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
+import { Button } from '@/components/ui/button';
 
 export default function PrivatePage() {
 	const router = useRouter();
@@ -12,10 +13,13 @@ export default function PrivatePage() {
 	}
 
 	return (
-		<section className='p-6'>
-			<h1 className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl'>
-				Hello {`${data.user.user_metadata['name']}`}
-			</h1>
+		<section className='px-6 py-4'>
+			<div className='flex justify-between items-center'>
+				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
+					Dashboard
+				</h3>
+				<Button>+ Add</Button>
+			</div>
 		</section>
 	);
 }
