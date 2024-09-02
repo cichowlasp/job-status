@@ -39,21 +39,12 @@ const defaultCols = [
 
 export type ColumnId = (typeof defaultCols)[number]['id'];
 
-const initialTasks: Task[] = [
-	{
-		id: 'task1',
-		columnId: 'applications',
-		jobTitle: 'Dolby Labolatory',
-		link: 'https://rocketjobs.pl/wroclaw/doswiadczenie_staz-junior?keyword=cyberbezpiecze%C5%84stwo',
-		content: 'Project initiation and planning',
-	},
-];
-export function KanbanBoard() {
+export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
 	const [columns, setColumns] = useState<Column[]>(defaultCols);
 	const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 	const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
-	const [tasks, setTasks] = useState<Task[]>(initialTasks);
+	const [tasks, setTasks] = useState<Task[]>(tasksList);
 
 	const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
@@ -194,50 +185,45 @@ export function KanbanBoard() {
 	};
 
 	return (
-		<div className='w-full'>
-			<DndContext
-				accessibility={{
-					announcements,
-				}}
-				sensors={sensors}
-				onDragStart={onDragStart}
-				onDragEnd={onDragEnd}
-				onDragOver={onDragOver}>
-				<BoardContainer>
-					<SortableContext items={columnsId}>
-						{columns.map((col) => (
+		<DndContext
+			accessibility={{
+				announcements,
+			}}
+			sensors={sensors}
+			onDragStart={onDragStart}
+			onDragEnd={onDragEnd}
+			onDragOver={onDragOver}>
+			<BoardContainer>
+				<SortableContext items={columnsId}>
+					{columns.map((col) => (
+						<BoardColumn
+							key={col.id}
+							column={col}
+							tasks={tasks.filter(
+								(task) => task.columnId === col.id
+							)}
+						/>
+					))}
+				</SortableContext>
+			</BoardContainer>
+
+			{'document' in window &&
+				createPortal(
+					<DragOverlay>
+						{activeColumn && (
 							<BoardColumn
-								key={col.id}
-								column={col}
+								isOverlay
+								column={activeColumn}
 								tasks={tasks.filter(
-									(task) => task.columnId === col.id
+									(task) => task.columnId === activeColumn.id
 								)}
 							/>
-						))}
-					</SortableContext>
-				</BoardContainer>
-
-				{'document' in window &&
-					createPortal(
-						<DragOverlay>
-							{activeColumn && (
-								<BoardColumn
-									isOverlay
-									column={activeColumn}
-									tasks={tasks.filter(
-										(task) =>
-											task.columnId === activeColumn.id
-									)}
-								/>
-							)}
-							{activeTask && (
-								<TaskCard task={activeTask} isOverlay />
-							)}
-						</DragOverlay>,
-						document.body
-					)}
-			</DndContext>
-		</div>
+						)}
+						{activeTask && <TaskCard task={activeTask} isOverlay />}
+					</DragOverlay>,
+					document.body
+				)}
+		</DndContext>
 	);
 
 	function onDragStart(event: DragStartEvent) {
