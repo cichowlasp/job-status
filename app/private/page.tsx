@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
+import { KanbanBoard } from '@/components/KanbanBoard';
 
 export default function PrivatePage() {
 	const router = useRouter();
@@ -13,12 +14,15 @@ export default function PrivatePage() {
 	}
 
 	return (
-		<section className='px-6 py-4'>
+		<section className='px-6 py-3'>
 			<div className='flex justify-between items-center'>
 				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
 					All jobs
 				</h3>
 				<Button>+ Add</Button>
+			</div>
+			<div className='w-full py-3'>
+				<KanbanBoard />
 			</div>
 		</section>
 	);

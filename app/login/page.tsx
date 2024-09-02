@@ -44,10 +44,8 @@ export default function LoginPage() {
 		setLading(true);
 		const error = await login(values);
 		if (error) {
-			setLading(false);
 			router.push('/error');
 		}
-		setLading(false);
 		router.push('/private');
 	};
 
