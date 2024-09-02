@@ -42,68 +42,10 @@ export type ColumnId = (typeof defaultCols)[number]['id'];
 const initialTasks: Task[] = [
 	{
 		id: 'task1',
-		columnId: 'done',
+		columnId: 'applications',
+		jobTitle: 'Dolby Labolatory',
+		link: 'https://rocketjobs.pl/wroclaw/doswiadczenie_staz-junior?keyword=cyberbezpiecze%C5%84stwo',
 		content: 'Project initiation and planning',
-	},
-	{
-		id: 'task2',
-		columnId: 'done',
-		content: 'Gather requirements from stakeholders',
-	},
-	{
-		id: 'task3',
-		columnId: 'done',
-		content: 'Create wireframes and mockups',
-	},
-	{
-		id: 'task4',
-		columnId: 'in-progress',
-		content: 'Develop homepage layout',
-	},
-	{
-		id: 'task5',
-		columnId: 'in-progress',
-		content: 'Design color scheme and typography',
-	},
-	{
-		id: 'task6',
-		columnId: 'applications',
-		content: 'Implement user authentication',
-	},
-	{
-		id: 'task7',
-		columnId: 'applications',
-		content: 'Build contact us page',
-	},
-	{
-		id: 'task8',
-		columnId: 'applications',
-		content: 'Create product catalog',
-	},
-	{
-		id: 'task9',
-		columnId: 'applications',
-		content: 'Develop about us page',
-	},
-	{
-		id: 'task10',
-		columnId: 'applications',
-		content: 'Optimize website for mobile devices',
-	},
-	{
-		id: 'task11',
-		columnId: 'applications',
-		content: 'Integrate payment gateway',
-	},
-	{
-		id: 'task12',
-		columnId: 'applications',
-		content: 'Perform testing and bug fixing',
-	},
-	{
-		id: 'task13',
-		columnId: 'applications',
-		content: 'Launch website and deploy to server',
 	},
 ];
 export function KanbanBoard() {

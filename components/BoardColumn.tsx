@@ -5,8 +5,6 @@ import { useMemo } from 'react';
 import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
-import { Button } from './ui/button';
-import { GripVertical } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 export interface Column {
