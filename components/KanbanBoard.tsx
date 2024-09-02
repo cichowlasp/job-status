@@ -24,8 +24,8 @@ import { coordinateGetter } from './multipleContainersKeyboardPreset';
 
 const defaultCols = [
 	{
-		id: 'todo' as const,
-		title: 'Todo',
+		id: 'applications' as const,
+		title: 'Application',
 	},
 	{
 		id: 'in-progress' as const,
@@ -67,42 +67,42 @@ const initialTasks: Task[] = [
 	},
 	{
 		id: 'task6',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Implement user authentication',
 	},
 	{
 		id: 'task7',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Build contact us page',
 	},
 	{
 		id: 'task8',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Create product catalog',
 	},
 	{
 		id: 'task9',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Develop about us page',
 	},
 	{
 		id: 'task10',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Optimize website for mobile devices',
 	},
 	{
 		id: 'task11',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Integrate payment gateway',
 	},
 	{
 		id: 'task12',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Perform testing and bug fixing',
 	},
 	{
 		id: 'task13',
-		columnId: 'todo',
+		columnId: 'applications',
 		content: 'Launch website and deploy to server',
 	},
 ];
@@ -252,45 +252,50 @@ export function KanbanBoard() {
 	};
 
 	return (
-		<DndContext
-			accessibility={{
-				announcements,
-			}}
-			sensors={sensors}
-			onDragStart={onDragStart}
-			onDragEnd={onDragEnd}
-			onDragOver={onDragOver}>
-			<BoardContainer>
-				<SortableContext items={columnsId}>
-					{columns.map((col) => (
-						<BoardColumn
-							key={col.id}
-							column={col}
-							tasks={tasks.filter(
-								(task) => task.columnId === col.id
-							)}
-						/>
-					))}
-				</SortableContext>
-			</BoardContainer>
-
-			{'document' in window &&
-				createPortal(
-					<DragOverlay>
-						{activeColumn && (
+		<div className='w-full'>
+			<DndContext
+				accessibility={{
+					announcements,
+				}}
+				sensors={sensors}
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+				onDragOver={onDragOver}>
+				<BoardContainer>
+					<SortableContext items={columnsId}>
+						{columns.map((col) => (
 							<BoardColumn
-								isOverlay
-								column={activeColumn}
+								key={col.id}
+								column={col}
 								tasks={tasks.filter(
-									(task) => task.columnId === activeColumn.id
+									(task) => task.columnId === col.id
 								)}
 							/>
-						)}
-						{activeTask && <TaskCard task={activeTask} isOverlay />}
-					</DragOverlay>,
-					document.body
-				)}
-		</DndContext>
+						))}
+					</SortableContext>
+				</BoardContainer>
+
+				{'document' in window &&
+					createPortal(
+						<DragOverlay>
+							{activeColumn && (
+								<BoardColumn
+									isOverlay
+									column={activeColumn}
+									tasks={tasks.filter(
+										(task) =>
+											task.columnId === activeColumn.id
+									)}
+								/>
+							)}
+							{activeTask && (
+								<TaskCard task={activeTask} isOverlay />
+							)}
+						</DragOverlay>,
+						document.body
+					)}
+			</DndContext>
+		</div>
 	);
 
 	function onDragStart(event: DragStartEvent) {

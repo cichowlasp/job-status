@@ -14,8 +14,8 @@ export default function PrivatePage() {
 	}
 
 	return (
-		<section className='px-6 py-3'>
-			<div className='flex justify-between items-center'>
+		<section className='px-6 py-3 max-h-[calc(100%-4rem)] overflow-hidden pb-4'>
+			<div className='flex justify-between max-h-full items-center'>
 				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
 					All jobs
 				</h3>
