@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function PrivatePage() {
 	const router = useRouter();
 	const auth = useAuth();
-	const [tasks, setTasks] = useState<Task[]>();
+	const [tasks, setTasks] = useState<Task[]>([]);
 
 	interface TaskData {
 		jobTitle: string;
@@ -48,7 +49,6 @@ export default function PrivatePage() {
 		if (error) {
 			console.error(error);
 		} else {
-			console.log(data);
 			setTasks(data as Task[]);
 		}
 	}, [auth.user?.id, setTasks]);
@@ -70,14 +70,17 @@ export default function PrivatePage() {
 				},
 				(payload) => {
 					console.log('dodano nowe gówno', payload.new);
-					tasks
-						? setTasks([...tasks, payload.new as Task])
-						: setTasks([payload.new as Task]);
+
+					setTasks((pre) => {
+						if (pre) {
+							return [...pre, payload.new as Task];
+						}
+						return [payload.new as Task];
+					});
+					console.log('data set :)', tasks);
 				}
 			)
 			.subscribe();
-
-		console.log(tasks);
 
 		return () => {
 			supabase.removeChannel(channel);
@@ -177,7 +180,9 @@ export default function PrivatePage() {
 				</Dialog>
 			</div>
 			<div className='w-full py-3 h-[calc(100%-2rem)]'>
-				{tasks ? <KanbanBoard tasksList={tasks} /> : null}
+				{tasks ? (
+					<KanbanBoard tasks={tasks} setTasks={setTasks} />
+				) : null}
 			</div>
 		</section>
 	);

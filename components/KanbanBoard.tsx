@@ -1,4 +1,4 @@
-'use client';
+export const revalidate = 0;
 
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -42,13 +42,17 @@ export const defaultCols = [
 
 export type ColumnId = (typeof defaultCols)[number]['id'];
 
-export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
+export function KanbanBoard({
+	tasks,
+	setTasks,
+}: {
+	tasks: Task[];
+	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}) {
 	const auth = useAuth();
 	const [columns, setColumns] = useState<Column[]>(defaultCols);
 	const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 	const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
-
-	const [tasks, setTasks] = useState<Task[]>(tasksList);
 
 	const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
@@ -310,9 +314,13 @@ export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
 					activeTask.columnId = overTask.columnId;
 					return arrayMove(tasks, activeIndex, overIndex - 1);
 				}
-
 				return arrayMove(tasks, activeIndex, overIndex);
 			});
+
+			await supabase
+				.from('tasks')
+				.update({ columnId: activeTask?.columnId })
+				.eq('id', activeTask?.id);
 		}
 
 		const isOverAColumn = overData?.type === 'Column';

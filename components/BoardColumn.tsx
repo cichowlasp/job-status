@@ -1,3 +1,5 @@
+export const revalidate = 0;
+
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
@@ -6,7 +8,6 @@ import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
-import { defaultCols } from './KanbanBoard';
 
 export interface Column {
 	id: UniqueIdentifier;
