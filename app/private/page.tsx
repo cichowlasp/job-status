@@ -75,6 +75,7 @@ export default function PrivatePage() {
 							setTasks((pre) => {
 								return [...pre, payload.new as Task];
 							});
+							return;
 						case 'UPDATE':
 							console.log('UPDATE', payload);
 							setTasks((pre) => {
@@ -84,15 +85,15 @@ export default function PrivatePage() {
 									return el;
 								});
 							});
+							return;
 						case 'DELETE':
 							console.log('DELETE', payload);
-						// setTasks((pre) => {
-						// 	return pre.map((el) => {
-						// 		if (el.id === payload.new.id)
-						// 			return payload.new as Task;
-						// 		return el;
-						// 	});
-						// });
+							setTasks((pre) => {
+								return pre.filter(
+									(el) => el.id !== payload.old.id
+								);
+							});
+							return;
 					}
 				}
 			)

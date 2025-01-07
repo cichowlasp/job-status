@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { CircleUserRound, LogOut } from 'lucide-react';
