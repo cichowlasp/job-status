@@ -63,21 +63,37 @@ export default function PrivatePage() {
 			.on(
 				'postgres_changes',
 				{
-					event: 'INSERT',
+					event: '*',
 					schema: 'public',
 					table: 'tasks',
 					filter: `user_id=eq.${auth.user?.id}`,
 				},
 				(payload) => {
-					console.log('dodano nowe gówno', payload.new);
-
-					setTasks((pre) => {
-						if (pre) {
-							return [...pre, payload.new as Task];
-						}
-						return [payload.new as Task];
-					});
-					console.log('data set :)', tasks);
+					switch (payload.eventType) {
+						case 'INSERT':
+							console.log('INSERTED', payload);
+							setTasks((pre) => {
+								return [...pre, payload.new as Task];
+							});
+						case 'UPDATE':
+							console.log('UPDATE', payload);
+							setTasks((pre) => {
+								return pre.map((el) => {
+									if (el.id === payload.new.id)
+										return payload.new as Task;
+									return el;
+								});
+							});
+						case 'DELETE':
+							console.log('DELETE', payload);
+						// setTasks((pre) => {
+						// 	return pre.map((el) => {
+						// 		if (el.id === payload.new.id)
+						// 			return payload.new as Task;
+						// 		return el;
+						// 	});
+						// });
+					}
 				}
 			)
 			.subscribe();
@@ -85,7 +101,7 @@ export default function PrivatePage() {
 		return () => {
 			supabase.removeChannel(channel);
 		};
-	}, [auth.user?.id, tasks]);
+	}, [auth.user?.id]);
 
 	if (!auth?.user) {
 		return router.push('/login');
