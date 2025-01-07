@@ -94,6 +94,16 @@ function Navbar() {
 										Logout
 									</Button>
 								</DropdownMenuItem>
+								<DropdownMenuItem
+									className=''
+									onClick={async () => {
+										router.push('/private');
+									}}>
+									<Button variant='link'>
+										<LogOut className='mr-2 h-4 w-4' />
+										My Tasks
+									</Button>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

@@ -21,6 +21,8 @@ import { type Task, TaskCard } from './TaskCard';
 import type { Column } from './BoardColumn';
 import { hasDraggableData } from './utils';
 import { coordinateGetter } from './multipleContainersKeyboardPreset';
+import { supabase } from '@/utils/supabase/useSupabase';
+import { useAuth } from '@/components/auth-provider';
 
 const defaultCols = [
 	{
@@ -40,6 +42,7 @@ const defaultCols = [
 export type ColumnId = (typeof defaultCols)[number]['id'];
 
 export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
+	const auth = useAuth();
 	const [columns, setColumns] = useState<Column[]>(defaultCols);
 	const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 	const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
@@ -272,7 +275,7 @@ export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
 		});
 	}
 
-	function onDragOver(event: DragOverEvent) {
+	async function onDragOver(event: DragOverEvent) {
 		const { active, over } = event;
 		if (!over) return;
 
@@ -318,12 +321,17 @@ export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
 			setTasks((tasks) => {
 				const activeIndex = tasks.findIndex((t) => t.id === activeId);
 				const activeTask = tasks[activeIndex];
+				console.log(activeTask);
 				if (activeTask) {
 					activeTask.columnId = overId as ColumnId;
 					return arrayMove(tasks, activeIndex, activeIndex);
 				}
 				return tasks;
 			});
+			await supabase
+				.from('tasks')
+				.update({ columnId: activeTask?.columnId })
+				.eq('id', activeTask?.id);
 		}
 	}
 }

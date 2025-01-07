@@ -87,7 +87,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 				{task.link && (
 					<Button variant='link' className='px-0'>
 						<Linkicon className='h-[1rem] w-[1rem]' />
-						<Link className='pl-2' href={task.link}>
+						<Link className='pl-2' target='_blank' href={task.link}>
 							Link
 						</Link>
 					</Button>

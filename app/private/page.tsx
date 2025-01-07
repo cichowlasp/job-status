@@ -1,26 +1,35 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { KanbanBoard } from '@/components/KanbanBoard';
 import { type Task } from '@/components/TaskCard';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/utils/supabase/useSupabase';
+import { useAuth } from '@/components/auth-provider';
 
 export default function PrivatePage() {
 	const router = useRouter();
-	const data = useAuth();
+	const auth = useAuth();
+	const [tasks, setTasks] = useState<Task[]>();
 
-	const initialTasks: Task[] = [
-		{
-			id: 'task1',
-			columnId: 'applications',
-			jobTitle: 'Dolby Labolatory',
-			link: 'https://rocketjobs.pl/wroclaw/doswiadczenie_staz-junior?keyword=cyberbezpiecze%C5%84stwo',
-			content: 'Project initiation and planning',
-		},
-	];
+	useEffect(() => {
+		const fetchTasks = async () => {
+			const { data, error } = await supabase
+				.from('tasks')
+				.select('*')
+				.eq('user_id', auth.user?.id);
+			if (error) {
+				console.error(error);
+			} else {
+				console.log(data);
+				setTasks(data as Task[]);
+			}
+		};
+		fetchTasks();
+	}, [auth.user?.id]);
 
-	if (!data?.user) {
+	if (!auth?.user) {
 		return router.push('/login');
 	}
 
@@ -30,10 +39,10 @@ export default function PrivatePage() {
 				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
 					All jobs
 				</h3>
-				<Button>+ Add</Button>
+				<Button>+ New Task</Button>
 			</div>
 			<div className='w-full py-3 h-[calc(100%-2rem)]'>
-				<KanbanBoard tasksList={initialTasks} />
+				{tasks ? <KanbanBoard tasksList={tasks} /> : null}
 			</div>
 		</section>
 	);
