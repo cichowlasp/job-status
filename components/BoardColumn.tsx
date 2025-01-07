@@ -6,6 +6,7 @@ import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import { defaultCols } from './KanbanBoard';
 
 export interface Column {
 	id: UniqueIdentifier;

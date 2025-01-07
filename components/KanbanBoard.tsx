@@ -1,6 +1,7 @@
+'use client';
+
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-
 import { BoardColumn, BoardContainer } from './BoardColumn';
 import {
 	DndContext,
@@ -24,7 +25,7 @@ import { coordinateGetter } from './multipleContainersKeyboardPreset';
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from '@/components/auth-provider';
 
-const defaultCols = [
+export const defaultCols = [
 	{
 		id: 'applications' as const,
 		title: 'Application',
@@ -321,7 +322,6 @@ export function KanbanBoard({ tasksList }: { tasksList: Task[] }) {
 			setTasks((tasks) => {
 				const activeIndex = tasks.findIndex((t) => t.id === activeId);
 				const activeTask = tasks[activeIndex];
-				console.log(activeTask);
 				if (activeTask) {
 					activeTask.columnId = overId as ColumnId;
 					return arrayMove(tasks, activeIndex, activeIndex);
