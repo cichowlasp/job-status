@@ -279,6 +279,7 @@ export function KanbanBoard({
 	}
 
 	async function onDragOver(event: DragOverEvent) {
+		let tempTasks = tasks;
 		const { active, over } = event;
 		if (!over) return;
 
@@ -299,45 +300,48 @@ export function KanbanBoard({
 
 		// Im dropping a Task over another Task
 		if (isActiveATask && isOverATask) {
-			setTasks((tasks) => {
-				const activeIndex = tasks.findIndex((t) => t.id === activeId);
-				const overIndex = tasks.findIndex((t) => t.id === overId);
-				const activeTask = tasks[activeIndex];
-				const overTask = tasks[overIndex];
-				if (
-					activeTask &&
-					overTask &&
-					activeTask.columnId !== overTask.columnId
-				) {
-					activeTask.columnId = overTask.columnId;
-					return arrayMove(tasks, activeIndex, overIndex - 1);
-				}
-				return arrayMove(tasks, activeIndex, overIndex);
-			});
-
-			await supabase
-				.from('tasks')
-				.update({ columnId: activeTask?.columnId })
-				.eq('id', activeTask?.id);
+			const activeIndex = tasks.findIndex((t) => t.id === activeId);
+			const overIndex = tasks.findIndex((t) => t.id === overId);
+			const activeTask = tasks[activeIndex];
+			const overTask = tasks[overIndex];
+			if (
+				activeTask &&
+				overTask &&
+				activeTask.columnId !== overTask.columnId
+			) {
+				activeTask.columnId = overTask.columnId;
+				tempTasks = arrayMove(tasks, activeIndex, overIndex - 1);
+			}
+			tempTasks = arrayMove(tasks, activeIndex, overIndex);
 		}
 
 		const isOverAColumn = overData?.type === 'Column';
 
 		// Im dropping a Task over a column
 		if (isActiveATask && isOverAColumn) {
-			setTasks((tasks) => {
-				const activeIndex = tasks.findIndex((t) => t.id === activeId);
-				const activeTask = tasks[activeIndex];
-				if (activeTask) {
-					activeTask.columnId = overId as ColumnId;
-					return arrayMove(tasks, activeIndex, activeIndex);
-				}
-				return tasks;
-			});
-			await supabase
-				.from('tasks')
-				.update({ columnId: activeTask?.columnId })
-				.eq('id', activeTask?.id);
+			const activeIndex = tasks.findIndex((t) => t.id === activeId);
+			const activeTask = tasks[activeIndex];
+			if (activeTask) {
+				activeTask.columnId = overId as ColumnId;
+				tempTasks = arrayMove(tasks, activeIndex, activeIndex);
+			}
 		}
+
+		tempTasks.forEach(async (el) => {
+			const { error } = await supabase
+				.from('tasks')
+				.update({
+					columnId: el.columnId,
+					link: el.link,
+					content: el.content,
+					jobTitle: el.jobTitle,
+					user_id: el.user_id,
+				})
+				.eq('id', el.id);
+
+			if (error) {
+				console.error(error);
+			}
+		});
 	}
 }

@@ -125,8 +125,10 @@ export default function PrivatePage() {
 		const { error } = await supabase
 			.from('tasks')
 			.insert({ ...taskData, user_id: auth?.user?.id });
-		await fetchTasks();
-		console.error(error);
+		if (error) {
+			console.error(error);
+		}
+
 		// Reset form after submission
 		setTaskData({
 			jobTitle: '',

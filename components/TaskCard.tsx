@@ -13,7 +13,22 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	DialogClose,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/utils/supabase/useSupabase';
+import { useState } from 'react';
+import { useAuth } from './auth-provider';
 
 export interface Task {
 	id: UniqueIdentifier;
@@ -21,6 +36,7 @@ export interface Task {
 	link?: string;
 	content?: string;
 	jobTitle: string;
+	user_id: string;
 }
 
 interface TaskCardProps {
@@ -33,6 +49,13 @@ export type TaskType = 'Task';
 export interface TaskDragData {
 	type: TaskType;
 	task: Task;
+}
+
+interface TaskData {
+	jobTitle: string;
+	link?: string;
+	content?: string;
+	columnId: string;
 }
 
 export function TaskCard({ task, isOverlay }: TaskCardProps) {
@@ -54,6 +77,15 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 		},
 	});
 
+	const auth = useAuth();
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+	const [taskData, setTaskData] = useState<TaskData>({
+		jobTitle: task.jobTitle,
+		link: task.link,
+		content: task.content,
+		columnId: task.columnId,
+	});
+
 	const style = {
 		transition,
 		transform: CSS.Translate.toString(transform),
@@ -71,6 +103,29 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 	const deleteTask = async (id: UniqueIdentifier) => {
 		const response = await supabase.from('tasks').delete().eq('id', id);
 		console.log(response);
+	};
+
+	const handleInputChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		const { name, value } = e.target;
+		setTaskData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		// Here you would typically send the data to your backend
+		console.log('Submitted task data:', taskData);
+		const { error } = await supabase
+			.from('tasks')
+			.update({ ...taskData, user_id: auth?.user?.id })
+			.eq('id', task.id);
+		if (error) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -99,8 +154,62 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 						onClick={async () => await deleteTask(task.id)}>
 						Delete
 					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+						Edit task
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
+
+			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+				<DialogContent className='sm:max-w-[425px]'>
+					<DialogHeader>
+						<DialogTitle>Edit task</DialogTitle>
+						<DialogDescription>
+							Fill in the details to change task informations.
+						</DialogDescription>
+					</DialogHeader>
+					<form onSubmit={handleSubmit} className='space-y-4'>
+						<div className='space-y-2'>
+							<Label htmlFor='jobTitle'>Job Title</Label>
+							<Input
+								id='jobTitle'
+								name='jobTitle'
+								value={taskData.jobTitle}
+								onChange={handleInputChange}
+								placeholder='Enter job title'
+							/>
+						</div>
+						<div className='space-y-2'>
+							<Label htmlFor='link'>Link</Label>
+							<Input
+								id='link'
+								name='link'
+								value={taskData.link}
+								onChange={handleInputChange}
+								placeholder='Enter link (optional)'
+							/>
+						</div>
+						<div className='space-y-2'>
+							<Label htmlFor='content'>Content</Label>
+							<Textarea
+								id='content'
+								name='content'
+								value={taskData.content}
+								onChange={handleInputChange}
+								placeholder='Enter task content (optional)'
+								rows={4}
+							/>
+						</div>
+						<DialogFooter>
+							<DialogClose className='w-full' asChild>
+								<Button className='w-full' type='submit'>
+									Save changes
+								</Button>
+							</DialogClose>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
 
 			<CardContent className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap'>
 				{task.content && <p>{task.content}</p>}
