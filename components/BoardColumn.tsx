@@ -1,12 +1,16 @@
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import type { Column } from '@/app/private/page';
+import { Button } from './ui/button';
+import { Pencil, Check } from 'lucide-react';
+import { Input } from './ui/input';
+import { supabase } from '@/utils/supabase/useSupabase';
 
 export type ColumnType = 'Column';
 
@@ -22,6 +26,8 @@ interface BoardColumnProps {
 }
 
 export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+	const [edit, setEdit] = useState(false);
+	const [columnName, setColumnName] = useState(column.title);
 	const tasksIds = useMemo(() => {
 		return tasks.map((task) => task.id);
 	}, [tasks]);
@@ -62,6 +68,15 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 		}
 	);
 
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		await supabase
+			.from('kanban_columns')
+			.update({ title: columnName })
+			.eq('id', column.id);
+		setEdit(false);
+	};
+
 	return (
 		<Card
 			ref={setNodeRef}
@@ -73,12 +88,42 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 					? 'over'
 					: undefined,
 			})}>
-			<CardHeader
-				{...attributes}
-				{...listeners}
-				className='px-4 py-2 font-semibold border-b-2 text-left flex flex-row space-between items-center'>
-				<span className='mr-auto my-auto'> {column.title}</span>
+			<CardHeader className='px-4 py-2 font-semibold border-b-2 text-left flex flex-row space-between items-center'>
+				{edit ? (
+					<form onSubmit={handleSubmit} className='flex'>
+						<Input
+							autoFocus={true}
+							className='mr-auto my-auto w-full h-full'
+							value={columnName}
+							onChange={(event) =>
+								setColumnName(event.target.value)
+							}></Input>
+						<Button
+							type='submit'
+							variant='default'
+							className='my-auto ml-2 h-fit w-2 rounded'>
+							<Check />
+						</Button>
+					</form>
+				) : (
+					<span
+						{...attributes}
+						{...listeners}
+						className='mr-auto my-auto w-full'>
+						{' '}
+						{column.title}
+					</span>
+				)}
+				<Button
+					onClick={(e) => {
+						setEdit((prev) => !prev);
+					}}
+					variant='ghost'
+					className='ml-auto my-auto  h-8 w-2'>
+					<Pencil />
+				</Button>
 			</CardHeader>
+
 			<ScrollArea>
 				<CardContent className='flex flex-grow flex-col gap-2 p-2'>
 					<SortableContext items={tasksIds}>

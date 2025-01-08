@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BoardColumn, BoardContainer } from './BoardColumn';
 import {
@@ -46,6 +46,10 @@ export function KanbanBoard({
 			coordinateGetter: coordinateGetter,
 		})
 	);
+
+	useEffect(() => {
+		setColumns(tempColumns);
+	}, [tempColumns]);
 
 	function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
 		const tasksInColumn = tasks.filter(

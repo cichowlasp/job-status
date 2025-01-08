@@ -232,7 +232,7 @@ export default function PrivatePage() {
 				</h3>
 				<Dialog>
 					<DialogTrigger asChild>
-						<Button variant='outline'>+ New Task</Button>
+						<Button variant='outline'>+ New</Button>
 					</DialogTrigger>
 					<DialogContent className='sm:max-w-[425px]'>
 						<DialogHeader>
