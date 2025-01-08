@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { defaultCols, KanbanBoard } from '@/components/KanbanBoard';
+import { KanbanBoard } from '@/components/KanbanBoard';
 import { type Task } from '@/components/TaskCard';
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/useSupabase';
@@ -21,24 +21,34 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import Loading from '@/components/Loading';
+
+export interface TaskData {
+	jobTitle: string;
+	link: string;
+	content: string;
+	columnId: string;
+}
+
+export interface Column {
+	id: string;
+	title: string;
+	user_id: string;
+	position: number;
+}
 
 export default function PrivatePage() {
 	const router = useRouter();
 	const auth = useAuth();
 	const [tasks, setTasks] = useState<Task[]>([]);
-
-	interface TaskData {
-		jobTitle: string;
-		link: string;
-		content: string;
-		columnId: string;
-	}
+	const [board, setBoard] = useState<Column[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	const [taskData, setTaskData] = useState<TaskData>({
 		jobTitle: '',
 		link: '',
 		content: '',
-		columnId: defaultCols[0].id,
+		columnId: '0',
 	});
 
 	const fetchTasks = useCallback(async () => {
@@ -53,12 +63,29 @@ export default function PrivatePage() {
 		}
 	}, [auth.user?.id, setTasks]);
 
-	useEffect(() => {
-		fetchTasks();
-	}, [fetchTasks]);
+	const fetchBoard = useCallback(async () => {
+		const { data, error } = await supabase
+			.from('kanban_columns')
+			.select('*')
+			.eq('user_id', auth.user?.id);
+		if (error) {
+			console.error(error);
+			return;
+		}
+		setBoard(data as Column[]);
+	}, [auth.user?.id, setBoard]);
 
 	useEffect(() => {
-		const channel = supabase
+		const fetchData = async () => {
+			await fetchTasks();
+			await fetchBoard();
+			setLoading(false);
+		};
+		fetchData();
+	}, [fetchTasks, fetchBoard]);
+
+	useEffect(() => {
+		const channelTask = supabase
 			.channel('tasks')
 			.on(
 				'postgres_changes',
@@ -99,8 +126,50 @@ export default function PrivatePage() {
 			)
 			.subscribe();
 
+		const channelColumns = supabase
+			.channel('kanban_columns')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'kanban_columns',
+					filter: `user_id=eq.${auth.user?.id}`,
+				},
+				(payload) => {
+					switch (payload.eventType) {
+						case 'INSERT':
+							console.log('INSERTED', payload);
+							setBoard((pre) => {
+								return [...pre, payload.new as Column];
+							});
+							return;
+						case 'UPDATE':
+							console.log('UPDATE', payload);
+							setBoard((pre) => {
+								return pre.map((el) => {
+									if (el.id === payload.new.id) {
+										return payload.new as Column;
+									}
+									return el;
+								});
+							});
+							return;
+						case 'DELETE':
+							console.log('DELETE', payload);
+							setBoard((pre) => {
+								return pre.filter(
+									(el) => el.id !== payload.old.id
+								);
+							});
+							return;
+					}
+				}
+			)
+			.subscribe();
 		return () => {
-			supabase.removeChannel(channel);
+			supabase.removeChannel(channelTask);
+			supabase.removeChannel(channelColumns);
 		};
 	}, [auth.user?.id]);
 
@@ -134,10 +203,13 @@ export default function PrivatePage() {
 			jobTitle: '',
 			link: '',
 			content: '',
-			columnId: defaultCols[0].id,
+			columnId: '0',
 		});
 	};
 
+	if (loading) {
+		return <Loading />;
+	}
 	return (
 		<section className='px-6 py-3 h-[calc(100%-4rem)] max-h-[calc(100%-4rem)] overflow-hidden pb-4'>
 			<div className='flex justify-between max-h-full items-center'>
@@ -199,9 +271,7 @@ export default function PrivatePage() {
 				</Dialog>
 			</div>
 			<div className='w-full py-3 h-[calc(100%-2rem)]'>
-				{tasks ? (
-					<KanbanBoard tasks={tasks} setTasks={setTasks} />
-				) : null}
+				<KanbanBoard tasks={tasks} columns={board} />
 			</div>
 		</section>
 	);

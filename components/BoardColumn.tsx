@@ -6,11 +6,7 @@ import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
-
-export interface Column {
-	id: UniqueIdentifier;
-	title: string;
-}
+import type { Column } from '@/app/private/page';
 
 export type ColumnType = 'Column';
 
@@ -99,7 +95,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 export function BoardContainer({ children }: { children: React.ReactNode }) {
 	const dndContext = useDndContext();
 
-	const variations = cva('flex pb-4 h-full', {
+	const variations = cva('flex pb-4', {
 		variants: {
 			dragging: {
 				default: 'snap-x snap-mandatory',

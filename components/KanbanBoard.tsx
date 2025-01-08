@@ -17,44 +17,27 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { type Task, TaskCard } from './TaskCard';
-import type { Column } from './BoardColumn';
+import type { Column } from '@/app/private/page';
 import { hasDraggableData } from './utils';
 import { coordinateGetter } from './multipleContainersKeyboardPreset';
 import { supabase } from '@/utils/supabase/useSupabase';
-import { useAuth } from '@/components/auth-provider';
-
-export const defaultCols = [
-	{
-		id: 'applications' as const,
-		title: 'Application',
-	},
-	{
-		id: 'in-progress' as const,
-		title: 'In progress',
-	},
-	{
-		id: 'done' as const,
-		title: 'Done',
-	},
-] satisfies Column[];
-
-export type ColumnId = (typeof defaultCols)[number]['id'];
 
 export function KanbanBoard({
 	tasks,
-	setTasks,
+	columns: tempColumns,
 }: {
 	tasks: Task[];
-	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+	columns: Column[];
 }) {
-	const auth = useAuth();
-	const [columns, setColumns] = useState<Column[]>(defaultCols);
+	const [columns, setColumns] = useState<Column[]>(tempColumns);
 	const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 	const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
 	const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
 	const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+	type ColumnId = (typeof columns)[number]['id'];
 
 	const sensors = useSensors(
 		useSensor(MouseSensor),
@@ -246,7 +229,7 @@ export function KanbanBoard({
 		}
 	}
 
-	function onDragEnd(event: DragEndEvent) {
+	async function onDragEnd(event: DragEndEvent) {
 		setActiveColumn(null);
 		setActiveTask(null);
 
@@ -264,17 +247,29 @@ export function KanbanBoard({
 
 		const isActiveAColumn = activeData?.type === 'Column';
 		if (!isActiveAColumn) return;
+		const activeColumnIndex = columns.findIndex(
+			(col) => col.id === activeId
+		);
 
-		setColumns((columns) => {
-			const activeColumnIndex = columns.findIndex(
-				(col) => col.id === activeId
-			);
+		const overColumnIndex = columns.findIndex((col) => col.id === overId);
 
-			const overColumnIndex = columns.findIndex(
-				(col) => col.id === overId
-			);
+		let tempColumns = arrayMove(
+			columns,
+			activeColumnIndex,
+			overColumnIndex
+		);
 
-			return arrayMove(columns, activeColumnIndex, overColumnIndex);
+		setColumns(tempColumns);
+
+		tempColumns.forEach(async (el, index) => {
+			const { error } = await supabase
+				.from('kanban_columns')
+				.update({ position: index + 1 })
+				.eq('id', el.id);
+
+			if (error) {
+				console.error(error);
+			}
 		});
 	}
 
