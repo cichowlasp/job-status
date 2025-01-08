@@ -67,7 +67,8 @@ export default function PrivatePage() {
 		const { data, error } = await supabase
 			.from('kanban_columns')
 			.select('*')
-			.eq('user_id', auth.user?.id);
+			.eq('user_id', auth.user?.id)
+			.order('position');
 		if (error) {
 			console.error(error);
 			return;
@@ -141,18 +142,29 @@ export default function PrivatePage() {
 						case 'INSERT':
 							console.log('INSERTED', payload);
 							setBoard((pre) => {
-								return [...pre, payload.new as Column];
+								return [
+									...pre.sort(
+										(a: Column, b: Column) =>
+											a.position - b.position
+									),
+									payload.new as Column,
+								];
 							});
 							return;
 						case 'UPDATE':
 							console.log('UPDATE', payload);
 							setBoard((pre) => {
-								return pre.map((el) => {
-									if (el.id === payload.new.id) {
-										return payload.new as Column;
-									}
-									return el;
-								});
+								return pre
+									.map((el) => {
+										if (el.id === payload.new.id) {
+											return payload.new as Column;
+										}
+										return el;
+									})
+									.sort(
+										(a: Column, b: Column) =>
+											a.position - b.position
+									);
 							});
 							return;
 						case 'DELETE':
