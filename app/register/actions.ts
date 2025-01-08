@@ -11,7 +11,7 @@ export async function signup({
 	password,
 	name,
 }: z.infer<typeof registerSchema>) {
-	const supabase = createClient();
+	const supabase = await createClient();
 	// type-casting here for convenience
 	// in practice, you should validate your inputs
 
