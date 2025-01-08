@@ -29,7 +29,6 @@ export function AuthProvider(props: AuthProviderProps) {
 			(_event, session) => {
 				setSession(session);
 				setUser(session?.user || null);
-				setLoading(false);
 			}
 		);
 
