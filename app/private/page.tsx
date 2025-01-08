@@ -48,7 +48,7 @@ export default function PrivatePage() {
 		jobTitle: '',
 		link: '',
 		content: '',
-		columnId: '0',
+		columnId: '',
 	});
 
 	const fetchTasks = useCallback(async () => {
@@ -203,9 +203,11 @@ export default function PrivatePage() {
 		e.preventDefault();
 		// Here you would typically send the data to your backend
 		console.log('Submitted task data:', taskData);
-		const { error } = await supabase
-			.from('tasks')
-			.insert({ ...taskData, user_id: auth?.user?.id });
+		const { error } = await supabase.from('tasks').insert({
+			...taskData,
+			user_id: auth?.user?.id,
+			columnId: board[0].id,
+		});
 		if (error) {
 			console.error(error);
 		}
@@ -215,7 +217,7 @@ export default function PrivatePage() {
 			jobTitle: '',
 			link: '',
 			content: '',
-			columnId: '0',
+			columnId: '',
 		});
 	};
 
