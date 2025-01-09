@@ -56,7 +56,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 	};
 
 	const variants = cva(
-		'h-[70vh] max-h-[70vh] w-[270px] sm:w-[350px] lg:w-[450px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
+		'h-[70vh] max-h-[70vh] w-[270px] sm:w-[350px] lg:w-[30%] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
 		{
 			variants: {
 				dragging: {
@@ -93,7 +93,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 					<form onSubmit={handleSubmit} className='flex'>
 						<Input
 							autoFocus={true}
-							className='mr-auto my-auto w-full h-full'
+							className=' my-auto md:w-full w-3/5 h-full'
 							value={columnName}
 							onChange={(event) =>
 								setColumnName(event.target.value)
@@ -101,7 +101,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 						<Button
 							type='submit'
 							variant='default'
-							className='my-auto ml-2 h-fit w-2 rounded'>
+							className='ml-3 my-auto h-fit w-2 rounded'>
 							<Check />
 						</Button>
 					</form>

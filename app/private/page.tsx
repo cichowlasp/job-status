@@ -1,5 +1,4 @@
 'use client';
-export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -8,20 +7,17 @@ import { type Task } from '@/components/TaskCard';
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from '@/components/auth-provider';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-	DialogClose,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import Loading from '@/components/Loading';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ClipboardList, Columns, Table } from 'lucide-react';
+import { NewTaskDialog } from '@/components/NewTaskDialog';
+import { NewColumnDialog } from '@/components/NewColumnDialog';
+import { subscribeBoard, subscribeTasks } from './actions';
 
 export interface TaskData {
 	jobTitle: string;
@@ -43,13 +39,8 @@ export default function PrivatePage() {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [board, setBoard] = useState<Column[]>([]);
 	const [loading, setLoading] = useState(true);
-
-	const [taskData, setTaskData] = useState<TaskData>({
-		jobTitle: '',
-		link: '',
-		content: '',
-		columnId: '',
-	});
+	const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
+	const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
 
 	const fetchTasks = useCallback(async () => {
 		const { data, error } = await supabase
@@ -86,205 +77,61 @@ export default function PrivatePage() {
 	}, [fetchTasks, fetchBoard]);
 
 	useEffect(() => {
-		const channelTask = supabase
-			.channel('tasks')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'tasks',
-					filter: `user_id=eq.${auth.user?.id}`,
-				},
-				(payload) => {
-					switch (payload.eventType) {
-						case 'INSERT':
-							console.log('INSERTED', payload);
-							setTasks((pre) => {
-								return [...pre, payload.new as Task];
-							});
-							return;
-						case 'UPDATE':
-							console.log('UPDATE', payload);
-							setTasks((pre) => {
-								return pre.map((el) => {
-									if (el.id === payload.new.id)
-										return payload.new as Task;
-									return el;
-								});
-							});
-							return;
-						case 'DELETE':
-							console.log('DELETE', payload);
-							setTasks((pre) => {
-								return pre.filter(
-									(el) => el.id !== payload.old.id
-								);
-							});
-							return;
-					}
-				}
-			)
-			.subscribe();
+		const tasksChannel = subscribeTasks(setTasks, auth?.user?.id);
+		const columnsChannel = subscribeBoard(setBoard, auth?.user?.id);
 
-		const channelColumns = supabase
-			.channel('kanban_columns')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'kanban_columns',
-					filter: `user_id=eq.${auth.user?.id}`,
-				},
-				(payload) => {
-					switch (payload.eventType) {
-						case 'INSERT':
-							console.log('INSERTED', payload);
-							setBoard((pre) => {
-								return [
-									...pre.sort(
-										(a: Column, b: Column) =>
-											a.position - b.position
-									),
-									payload.new as Column,
-								];
-							});
-							return;
-						case 'UPDATE':
-							console.log('UPDATE', payload);
-							setBoard((pre) => {
-								return pre
-									.map((el) => {
-										if (el.id === payload.new.id) {
-											return payload.new as Column;
-										}
-										return el;
-									})
-									.sort(
-										(a: Column, b: Column) =>
-											a.position - b.position
-									);
-							});
-							return;
-						case 'DELETE':
-							console.log('DELETE', payload);
-							setBoard((pre) => {
-								return pre.filter(
-									(el) => el.id !== payload.old.id
-								);
-							});
-							return;
-					}
-				}
-			)
-			.subscribe();
 		return () => {
-			supabase.removeChannel(channelTask);
-			supabase.removeChannel(channelColumns);
+			supabase.removeChannel(tasksChannel);
+			supabase.removeChannel(columnsChannel);
 		};
 	}, [auth.user?.id]);
 
 	if (!auth?.user) {
-		return router.push('/login');
+		router.push('/login');
+		return;
 	}
-
-	const handleInputChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		setTaskData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
-	};
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		// Here you would typically send the data to your backend
-		console.log('Submitted task data:', taskData);
-		const { error } = await supabase.from('tasks').insert({
-			...taskData,
-			user_id: auth?.user?.id,
-			columnId: board[0].id,
-		});
-		if (error) {
-			console.error(error);
-		}
-
-		// Reset form after submission
-		setTaskData({
-			jobTitle: '',
-			link: '',
-			content: '',
-			columnId: '',
-		});
-	};
 
 	if (loading) {
 		return <Loading />;
 	}
+
 	return (
 		<section className='px-6 py-3 h-[calc(100%-4rem)] max-h-[calc(100%-4rem)] overflow-hidden pb-4'>
 			<div className='flex justify-between max-h-full items-center'>
 				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
 					Tasks
 				</h3>
-				<Dialog>
-					<DialogTrigger asChild>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
 						<Button variant='outline'>+ New</Button>
-					</DialogTrigger>
-					<DialogContent className='sm:max-w-[425px]'>
-						<DialogHeader>
-							<DialogTitle>Create New Task</DialogTitle>
-							<DialogDescription>
-								Fill in the details to create a new task.
-							</DialogDescription>
-						</DialogHeader>
-						<form onSubmit={handleSubmit} className='space-y-4'>
-							<div className='space-y-2'>
-								<Label htmlFor='jobTitle'>Job Title</Label>
-								<Input
-									id='jobTitle'
-									name='jobTitle'
-									value={taskData.jobTitle}
-									onChange={handleInputChange}
-									placeholder='Enter job title'
-								/>
-							</div>
-							<div className='space-y-2'>
-								<Label htmlFor='link'>Link</Label>
-								<Input
-									id='link'
-									name='link'
-									value={taskData.link}
-									onChange={handleInputChange}
-									placeholder='Enter link (optional)'
-								/>
-							</div>
-							<div className='space-y-2'>
-								<Label htmlFor='content'>Content</Label>
-								<Textarea
-									id='content'
-									name='content'
-									value={taskData.content}
-									onChange={handleInputChange}
-									placeholder='Enter task content (optional)'
-									rows={4}
-								/>
-							</div>
-							<DialogFooter>
-								<DialogClose className='w-full' asChild>
-									<Button className='w-full' type='submit'>
-										Save changes
-									</Button>
-								</DialogClose>
-							</DialogFooter>
-						</form>
-					</DialogContent>
-				</Dialog>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent className='w-fit-content'>
+						<DropdownMenuItem
+							onClick={() => setIsNewDialogOpen(true)}>
+							<ClipboardList className='mr-2 h-4 w-4' />
+							Task
+						</DropdownMenuItem>
+						<DropdownMenuItem
+							onClick={() => setIsColumnDialogOpen(true)}>
+							<Table className='mr-2 h-4 w-4' />
+							Column
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
-			<div className='w-full py-3 h-[calc(100%-2rem)]'>
+			<NewTaskDialog
+				open={isNewDialogOpen}
+				setOpen={setIsNewDialogOpen}
+				userId={auth.user.id}
+				board={board}
+			/>
+			<NewColumnDialog
+				open={isColumnDialogOpen}
+				setOpen={setIsColumnDialogOpen}
+				userId={auth.user.id}
+				board={board}
+			/>
+			<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
 				<KanbanBoard tasks={tasks} columns={board} />
 			</div>
 		</section>

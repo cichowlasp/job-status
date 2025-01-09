@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { CircleUserRound, LogOut } from 'lucide-react';
+import { CircleUserRound, LogOut, ClipboardList } from 'lucide-react';
 import { ThemeSwitcher } from './theme-switch';
 import {
 	DropdownMenu,
@@ -100,7 +100,7 @@ function Navbar() {
 										router.push('/private');
 									}}>
 									<Button variant='link'>
-										<LogOut className='mr-2 h-4 w-4' />
+										<ClipboardList className='mr-2 h-4 w-4' />
 										My Tasks
 									</Button>
 								</DropdownMenuItem>
