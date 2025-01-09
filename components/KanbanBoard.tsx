@@ -192,6 +192,7 @@ export function KanbanBoard({
 						<BoardColumn
 							key={col.id}
 							column={col}
+							columns={columns}
 							tasks={tasks.filter(
 								(task) => task.columnId === col.id
 							)}
@@ -207,6 +208,7 @@ export function KanbanBoard({
 							<BoardColumn
 								isOverlay
 								column={activeColumn}
+								columns={columns}
 								tasks={tasks.filter(
 									(task) => task.columnId === activeColumn.id
 								)}

@@ -8,9 +8,22 @@ import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import type { Column } from '@/app/private/page';
 import { Button } from './ui/button';
-import { Pencil, Check } from 'lucide-react';
+import { Pencil, Check, Trash } from 'lucide-react';
 import { Input } from './ui/input';
 import { supabase } from '@/utils/supabase/useSupabase';
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
+import { promise } from 'zod';
 
 export type ColumnType = 'Column';
 
@@ -23,9 +36,15 @@ interface BoardColumnProps {
 	column: Column;
 	tasks: Task[];
 	isOverlay?: boolean;
+	columns: Column[];
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({
+	column,
+	tasks,
+	isOverlay,
+	columns,
+}: BoardColumnProps) {
 	const [edit, setEdit] = useState(false);
 	const [columnName, setColumnName] = useState(column.title);
 	const tasksIds = useMemo(() => {
@@ -56,7 +75,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 	};
 
 	const variants = cva(
-		'h-[70vh] max-h-[70vh] w-[270px] sm:w-[350px] lg:w-[30%] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
+		'h-[70vh] max-h-[70vh] w-[270px] sm:w-[350px] lg:w-[375px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
 		{
 			variants: {
 				dragging: {
@@ -77,6 +96,29 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 		setEdit(false);
 	};
 
+	const deleteColumn = async () => {
+		const leftColumns = columns.filter((el) => el.id !== column.id);
+		let itemsProcessed = 0;
+		tasks.forEach(async (task) => {
+			await supabase
+				.from('tasks')
+				.update({
+					columnId: leftColumns[0].id,
+				})
+				.eq('id', task.id);
+			itemsProcessed++;
+			if (itemsProcessed === tasks.length) {
+				const { error } = await supabase
+					.from('kanban_columns')
+					.delete()
+					.eq('id', column.id);
+				if (error) {
+					console.error(error);
+				}
+			}
+		});
+	};
+
 	return (
 		<Card
 			ref={setNodeRef}
@@ -90,21 +132,65 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 			})}>
 			<CardHeader className='px-4 py-2 font-semibold border-b-2 text-left flex flex-row space-between items-center'>
 				{edit ? (
-					<form onSubmit={handleSubmit} className='flex'>
-						<Input
-							autoFocus={true}
-							className=' my-auto md:w-full w-3/5 h-full'
-							value={columnName}
-							onChange={(event) =>
-								setColumnName(event.target.value)
-							}></Input>
-						<Button
-							type='submit'
-							variant='default'
-							className='ml-3 my-auto h-fit w-2 rounded'>
-							<Check />
-						</Button>
-					</form>
+					<>
+						<form onSubmit={handleSubmit} className='flex'>
+							<Input
+								autoFocus={true}
+								className=' my-auto md:w-full w-3/5 h-full'
+								value={columnName}
+								onChange={(event) =>
+									setColumnName(event.target.value)
+								}></Input>
+							<Button
+								type='submit'
+								variant='default'
+								className='ml-3 my-auto h-fit w-2 rounded'>
+								<Check />
+							</Button>
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<Button
+										variant='destructive'
+										className='ml-3 my-auto h-fit w-2 rounded '>
+										<Trash />
+									</Button>
+								</AlertDialogTrigger>
+								<AlertDialogContent>
+									<AlertDialogHeader>
+										<AlertDialogTitle>
+											Are you absolutely sure to delete
+											<span className='italic'>
+												{' '}
+												&quot;
+												{column.title}&quot;
+											</span>{' '}
+											column?
+										</AlertDialogTitle>
+										<AlertDialogDescription>
+											This action cannot be undone. This
+											will permanently delete this column
+											and move all task to the first
+											column.
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>
+											Cancel
+										</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={async () => {
+												await deleteColumn();
+											}}
+											className={buttonVariants({
+												variant: 'destructive',
+											})}>
+											Delete
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
+						</form>
+					</>
 				) : (
 					<span
 						{...attributes}
