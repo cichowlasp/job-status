@@ -22,6 +22,7 @@ import { NewTaskDialog } from '@/components/NewTaskDialog';
 import { NewColumnDialog } from '@/components/NewColumnDialog';
 import { subscribeBoard, subscribeTasks, subscribeView } from './actions';
 import { TaskList } from '@/components/List';
+import { set } from 'zod';
 
 export interface Column {
 	id: string;
@@ -64,6 +65,7 @@ export default function PrivatePage() {
 		}
 		setBoard(data as Column[]);
 	}, [auth.user?.id, setBoard]);
+
 	const fetchView = useCallback(async () => {
 		const { data, error } = await supabase
 			.from('view')
@@ -74,7 +76,7 @@ export default function PrivatePage() {
 			return;
 		}
 		setView(data[0]?.view || 'Board');
-	}, [auth.user?.id, setBoard]);
+	}, [auth.user?.id, setView]);
 
 	useEffect(() => {
 		const fetchData = async () => {
