@@ -59,6 +59,8 @@ export default function PrivatePage() {
 			.select('*')
 			.eq('user_id', auth.user?.id)
 			.order('position');
+
+		console.log(data);
 		if (error) {
 			console.error(error);
 			return;

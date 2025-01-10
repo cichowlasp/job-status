@@ -29,9 +29,8 @@ export async function signup({
 
 	const { error } = await supabase.auth.signUp(data);
 
-	console.log(error);
-
 	if (error) {
+		console.error(error);
 		redirect('/error');
 	}
 
