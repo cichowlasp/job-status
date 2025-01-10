@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { TaskData } from '@/app/private/page';
+import type { Task as TaskData } from './TaskCard';
 import { supabase } from '@/utils/supabase/useSupabase';
 import type { Column } from '@/app/private/page';
 
@@ -29,10 +29,13 @@ export const NewTaskDialog = ({
 	board: Column[];
 }) => {
 	const [taskData, setTaskData] = useState<TaskData>({
+		id: '',
+		user_id: userId,
 		jobTitle: '',
 		link: '',
 		content: '',
 		columnId: '',
+		active: true,
 	});
 
 	const handleInputChange = (
@@ -48,9 +51,12 @@ export const NewTaskDialog = ({
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		// Here you would typically send the data to your backend
-		console.log('Submitted task data:', taskData);
+
+		const { id, ...dataWithoutId } = taskData;
+		console.log('Submitted task data:', dataWithoutId);
+
 		const { error } = await supabase.from('tasks').insert({
-			...taskData,
+			...dataWithoutId,
 			user_id: userId,
 			columnId: board[0].id,
 		});
@@ -60,10 +66,13 @@ export const NewTaskDialog = ({
 
 		// Reset form after submission
 		setTaskData({
+			id: '',
+			user_id: userId,
 			jobTitle: '',
 			link: '',
 			content: '',
 			columnId: '',
+			active: true,
 		});
 	};
 
