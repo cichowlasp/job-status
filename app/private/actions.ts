@@ -101,3 +101,33 @@ export const subscribeBoard = (
 		)
 		.subscribe();
 };
+
+export const subscribeView = (
+	setView: React.Dispatch<React.SetStateAction<'Board' | 'List'>>,
+	userId: string | undefined
+) => {
+	return supabase
+		.channel('view')
+		.on(
+			'postgres_changes',
+			{
+				event: '*',
+				schema: 'public',
+				table: 'view',
+				filter: `user_id=eq.${userId}`,
+			},
+			(payload) => {
+				switch (payload.eventType) {
+					case 'INSERT':
+						console.log('INSERTED', payload);
+						setView(payload.new.view as 'Board' | 'List');
+						return;
+					case 'UPDATE':
+						console.log('UPDATE', payload);
+						setView(payload.new.view as 'Board' | 'List');
+						return;
+				}
+			}
+		)
+		.subscribe();
+};

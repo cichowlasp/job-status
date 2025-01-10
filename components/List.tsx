@@ -33,7 +33,7 @@ interface TaskListProps {
 
 export function TaskList({ tasks, board }: TaskListProps) {
 	return (
-		<ScrollArea className='h-[90%] rounded-md border'>
+		<ScrollArea className='h-[100%] rounded-md border'>
 			<Table>
 				<TableHeader>
 					<TableRow>

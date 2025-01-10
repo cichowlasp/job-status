@@ -20,7 +20,7 @@ import {
 import { ClipboardList, Table, ChevronDown } from 'lucide-react';
 import { NewTaskDialog } from '@/components/NewTaskDialog';
 import { NewColumnDialog } from '@/components/NewColumnDialog';
-import { subscribeBoard, subscribeTasks } from './actions';
+import { subscribeBoard, subscribeTasks, subscribeView } from './actions';
 import { TaskList } from '@/components/List';
 
 export interface Column {
@@ -64,23 +64,37 @@ export default function PrivatePage() {
 		}
 		setBoard(data as Column[]);
 	}, [auth.user?.id, setBoard]);
+	const fetchView = useCallback(async () => {
+		const { data, error } = await supabase
+			.from('view')
+			.select()
+			.eq('user_id', auth.user?.id);
+		if (error) {
+			console.error(error);
+			return;
+		}
+		setView(data[0]?.view || 'Board');
+	}, [auth.user?.id, setBoard]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			await fetchTasks();
 			await fetchBoard();
+			await fetchView();
 			setLoading(false);
 		};
 		fetchData();
-	}, [fetchTasks, fetchBoard]);
+	}, [fetchTasks, fetchBoard, fetchView]);
 
 	useEffect(() => {
 		const tasksChannel = subscribeTasks(setTasks, auth?.user?.id);
 		const columnsChannel = subscribeBoard(setBoard, auth?.user?.id);
+		const viewChannel = subscribeView(setView, auth?.user?.id);
 
 		return () => {
 			supabase.removeChannel(tasksChannel);
 			supabase.removeChannel(columnsChannel);
+			supabase.removeChannel(viewChannel);
 		};
 	}, [auth.user?.id]);
 
@@ -107,10 +121,26 @@ export default function PrivatePage() {
 						<DropdownMenuLabel>Select view</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem onClick={() => setView('Board')}>
+							<DropdownMenuItem
+								onClick={async () =>
+									await supabase
+										.from('view')
+										.update({
+											view: 'Board',
+										})
+										.eq('user_id', auth?.user?.id)
+								}>
 								Board
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setView('List')}>
+							<DropdownMenuItem
+								onClick={async () =>
+									await supabase
+										.from('view')
+										.update({
+											view: 'List',
+										})
+										.eq('user_id', auth?.user?.id)
+								}>
 								List
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
