@@ -136,7 +136,7 @@ export function BoardColumn({
 						<form onSubmit={handleSubmit} className='flex'>
 							<Input
 								autoFocus={true}
-								className=' my-auto md:w-full w-3/5 h-full'
+								className=' my-auto md:w-full w-1/2 h-full'
 								value={columnName}
 								onChange={(event) =>
 									setColumnName(event.target.value)
@@ -151,7 +151,7 @@ export function BoardColumn({
 								<AlertDialogTrigger asChild>
 									<Button
 										variant='destructive'
-										className='ml-3 my-auto h-fit w-2 rounded '>
+										className='ml-2 my-auto h-fit w-2 rounded '>
 										<Trash />
 									</Button>
 								</AlertDialogTrigger>

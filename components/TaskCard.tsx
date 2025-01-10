@@ -36,6 +36,7 @@ export interface Task {
 	content?: string;
 	jobTitle: string;
 	user_id: string;
+	active: boolean;
 }
 
 interface TaskCardProps {

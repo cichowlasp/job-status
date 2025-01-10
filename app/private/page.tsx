@@ -11,20 +11,17 @@ import Loading from '@/components/Loading';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ClipboardList, Columns, Table } from 'lucide-react';
+import { ClipboardList, Table, ChevronDown } from 'lucide-react';
 import { NewTaskDialog } from '@/components/NewTaskDialog';
 import { NewColumnDialog } from '@/components/NewColumnDialog';
 import { subscribeBoard, subscribeTasks } from './actions';
-
-export interface TaskData {
-	jobTitle: string;
-	link: string;
-	content: string;
-	columnId: string;
-}
+import { TaskList } from '@/components/List';
 
 export interface Column {
 	id: string;
@@ -41,6 +38,7 @@ export default function PrivatePage() {
 	const [loading, setLoading] = useState(true);
 	const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
 	const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
+	const [view, setView] = useState<'Board' | 'List'>('Board');
 
 	const fetchTasks = useCallback(async () => {
 		const { data, error } = await supabase
@@ -98,14 +96,32 @@ export default function PrivatePage() {
 	return (
 		<section className='px-6 py-3 h-[calc(100%-4rem)] max-h-[calc(100%-4rem)] overflow-hidden pb-4'>
 			<div className='flex justify-between max-h-full items-center'>
-				<h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
-					Tasks
-				</h3>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<h3 className='flex items-center scroll-m-20 text-sm font-semibold tracking-tight p-2 rounded-md border-2'>
+							{view}
+							<ChevronDown className='ml-2' size={16} />
+						</h3>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align='start' className='w-fit'>
+						<DropdownMenuLabel>Select view</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuGroup>
+							<DropdownMenuItem onClick={() => setView('Board')}>
+								Board
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setView('List')}>
+								List
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+					</DropdownMenuContent>
+				</DropdownMenu>
+
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant='outline'>+ New</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent className='w-fit-content'>
+					<DropdownMenuContent align='end' className='w-fit-content'>
 						<DropdownMenuItem
 							onClick={() => setIsNewDialogOpen(true)}>
 							<ClipboardList className='mr-2 h-4 w-4' />
@@ -131,9 +147,16 @@ export default function PrivatePage() {
 				userId={auth.user.id}
 				board={board}
 			/>
-			<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
-				<KanbanBoard tasks={tasks} columns={board} />
-			</div>
+			{view === 'Board' ? (
+				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
+					<KanbanBoard tasks={tasks} columns={board} />
+				</div>
+			) : null}
+			{view === 'List' ? (
+				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
+					<TaskList tasks={tasks} board={board} />
+				</div>
+			) : null}
 		</section>
 	);
 }
