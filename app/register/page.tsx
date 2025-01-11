@@ -140,13 +140,6 @@ export default function RegisterPage() {
 								<Button type='submit' className='w-full'>
 									Create Account
 								</Button>
-								<Button
-									type='button'
-									className='w-full'
-									onClick={onLogin}
-									variant='secondary'>
-									Login
-								</Button>
 							</div>
 						</form>
 					</Form>

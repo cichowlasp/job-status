@@ -109,13 +109,6 @@ export default function LoginPage() {
 								<Button className='w-full' type='submit'>
 									{loading ? <Loading /> : 'Login'}
 								</Button>
-								<Button
-									onClick={onSignUp}
-									className='w-full'
-									type='button'
-									variant='secondary'>
-									Signup
-								</Button>
 							</div>
 						</form>
 					</Form>
