@@ -87,7 +87,6 @@ function Navbar() {
 									className=''
 									onClick={async () => {
 										await signOut();
-										router.push('/');
 									}}>
 									<Button variant='link'>
 										<LogOut className='mr-2 h-4 w-4' />

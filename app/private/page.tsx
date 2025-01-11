@@ -41,7 +41,14 @@ export default function PrivatePage() {
 	const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
 	const [view, setView] = useState<'Board' | 'List'>('Board');
 
+	useEffect(() => {
+		if (!auth.user) {
+			router.push('/login'); // Redirect to login page if user is not authenticated
+		}
+	}, [auth.user, router]);
+
 	const fetchTasks = useCallback(async () => {
+		if (!auth.user?.id) return;
 		const { data, error } = await supabase
 			.from('tasks')
 			.select('*')
@@ -54,6 +61,7 @@ export default function PrivatePage() {
 	}, [auth.user?.id, setTasks]);
 
 	const fetchBoard = useCallback(async () => {
+		if (!auth.user?.id) return;
 		const { data, error } = await supabase
 			.from('kanban_columns')
 			.select('*')
@@ -69,6 +77,7 @@ export default function PrivatePage() {
 	}, [auth.user?.id, setBoard]);
 
 	const fetchView = useCallback(async () => {
+		if (!auth.user?.id) return;
 		const { data, error } = await supabase
 			.from('view')
 			.select()
@@ -91,6 +100,7 @@ export default function PrivatePage() {
 	}, [fetchTasks, fetchBoard, fetchView]);
 
 	useEffect(() => {
+		if (!auth.user?.id) return;
 		const tasksChannel = subscribeTasks(setTasks, auth?.user?.id);
 		const columnsChannel = subscribeBoard(setBoard, auth?.user?.id);
 		const viewChannel = subscribeView(setView, auth?.user?.id);
@@ -101,11 +111,6 @@ export default function PrivatePage() {
 			supabase.removeChannel(viewChannel);
 		};
 	}, [auth.user?.id]);
-
-	if (!auth?.user) {
-		router.push('/login');
-		return;
-	}
 
 	if (loading) {
 		return <Loading />;
@@ -169,18 +174,23 @@ export default function PrivatePage() {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<NewTaskDialog
-				open={isNewDialogOpen}
-				setOpen={setIsNewDialogOpen}
-				userId={auth.user.id}
-				board={board}
-			/>
-			<NewColumnDialog
-				open={isColumnDialogOpen}
-				setOpen={setIsColumnDialogOpen}
-				userId={auth.user.id}
-				board={board}
-			/>
+			{auth?.user?.id ? (
+				<>
+					<NewTaskDialog
+						open={isNewDialogOpen}
+						setOpen={setIsNewDialogOpen}
+						userId={auth?.user?.id}
+						board={board}
+					/>
+					<NewColumnDialog
+						open={isColumnDialogOpen}
+						setOpen={setIsColumnDialogOpen}
+						userId={auth?.user?.id}
+						board={board}
+					/>
+				</>
+			) : null}
+
 			{view === 'Board' ? (
 				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
 					<KanbanBoard tasks={tasks} columns={board} />

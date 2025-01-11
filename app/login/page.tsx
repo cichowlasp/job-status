@@ -73,6 +73,7 @@ export default function LoginPage() {
 										</FormLabel>
 										<FormControl>
 											<Input
+												autoComplete='email'
 												placeholder={field.name}
 												{...field}
 											/>
@@ -92,6 +93,7 @@ export default function LoginPage() {
 										</FormLabel>
 										<FormControl>
 											<Input
+												autoComplete='current-password'
 												type='password'
 												placeholder={field.name}
 												{...field}
