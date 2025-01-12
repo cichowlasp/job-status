@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
 	Table,
 	TableBody,
@@ -13,6 +11,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Task as TaskData } from '@/components/TaskCard';
 import type { Column } from '@/app/private/page';
+import type { Task } from '@/components/TaskCard';
 import { Link } from 'lucide-react';
 
 import {
@@ -29,9 +28,10 @@ import { supabase } from '@/utils/supabase/useSupabase';
 interface TaskListProps {
 	tasks: TaskData[];
 	board: Column[];
+	openTaskDetail: (task: Task) => void;
 }
 
-export function TaskList({ tasks, board }: TaskListProps) {
+export function TaskList({ tasks, board, openTaskDetail }: TaskListProps) {
 	return (
 		<ScrollArea className='h-[100%] rounded-md border'>
 			<Table>
@@ -47,7 +47,9 @@ export function TaskList({ tasks, board }: TaskListProps) {
 				</TableHeader>
 				<TableBody>
 					{tasks.map((task) => (
-						<TableRow key={task.id}>
+						<TableRow
+							onClick={() => openTaskDetail(task)}
+							key={task.id}>
 							<TableCell>{task.jobTitle}</TableCell>
 							<TableCell className='sm:table-cell hidden'>
 								<a

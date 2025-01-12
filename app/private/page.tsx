@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { KanbanBoard } from '@/components/KanbanBoard';
 import { type Task } from '@/components/TaskCard';
@@ -23,6 +23,7 @@ import { NewColumnDialog } from '@/components/NewColumnDialog';
 import { subscribeBoard, subscribeTasks, subscribeView } from './actions';
 import { TaskList } from '@/components/List';
 import { set } from 'zod';
+import { TaskDetailModal } from '@/components/TaskDetailsModal';
 
 export interface Column {
 	id: string;
@@ -34,12 +35,14 @@ export interface Column {
 export default function PrivatePage() {
 	const router = useRouter();
 	const auth = useAuth();
+	const searchParams = useSearchParams();
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [board, setBoard] = useState<Column[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
 	const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
 	const [view, setView] = useState<'Board' | 'List'>('Board');
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
 	useEffect(() => {
 		if (!auth.user) {
@@ -111,6 +114,26 @@ export default function PrivatePage() {
 			supabase.removeChannel(viewChannel);
 		};
 	}, [auth.user?.id]);
+
+	useEffect(() => {
+		const taskId = searchParams.get('taskId');
+		if (taskId) {
+			const task = tasks.find((t) => t.id === taskId);
+			if (task) {
+				setSelectedTask(task);
+			}
+		}
+	}, [searchParams, tasks]);
+
+	const openTaskDetail = (task: Task) => {
+		setSelectedTask(task);
+		router.push(`private/?taskId=${task.id}`, undefined);
+	};
+
+	const closeTaskDetail = () => {
+		setSelectedTask(null);
+		router.push('/private', undefined);
+	};
 
 	if (loading) {
 		return <Loading />;
@@ -198,9 +221,20 @@ export default function PrivatePage() {
 			) : null}
 			{view === 'List' ? (
 				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
-					<TaskList tasks={tasks} board={board} />
+					<TaskList
+						tasks={tasks}
+						board={board}
+						openTaskDetail={openTaskDetail}
+					/>
 				</div>
 			) : null}
+			{selectedTask && (
+				<TaskDetailModal
+					task={selectedTask}
+					onClose={closeTaskDetail}
+					columns={board}
+				/>
+			)}
 		</section>
 	);
 }
