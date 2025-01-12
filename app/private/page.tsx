@@ -59,7 +59,14 @@ export default function PrivatePage() {
 		if (error) {
 			console.error(error);
 		} else {
-			setTasks(data as Task[]);
+			setTasks(() => data as Task[]);
+			const taskId = searchParams.get('taskId');
+			if (taskId) {
+				const task = data.find((t: Task) => t.id == taskId);
+				if (task) {
+					setSelectedTask(task);
+				}
+			}
 		}
 	}, [auth.user?.id, setTasks]);
 
@@ -114,16 +121,6 @@ export default function PrivatePage() {
 			supabase.removeChannel(viewChannel);
 		};
 	}, [auth.user?.id]);
-
-	useEffect(() => {
-		const taskId = searchParams.get('taskId');
-		if (taskId) {
-			const task = tasks.find((t) => t.id === taskId);
-			if (task) {
-				setSelectedTask(task);
-			}
-		}
-	}, [searchParams, tasks]);
 
 	const openTaskDetail = (task: Task) => {
 		setSelectedTask(task);
