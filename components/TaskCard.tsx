@@ -1,3 +1,5 @@
+'use client';
+
 import type { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -26,7 +28,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/utils/supabase/useSupabase';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { useAuth } from './auth-provider';
 
 export interface Task {
@@ -42,6 +44,7 @@ export interface Task {
 interface TaskCardProps {
 	task: Task;
 	isOverlay?: boolean;
+	openTaskDetail: (task: Task) => void;
 }
 
 export type TaskType = 'Task';
@@ -58,7 +61,7 @@ interface TaskData {
 	columnId: string;
 }
 
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 	const {
 		setNodeRef,
 		attributes,
@@ -213,7 +216,9 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 				</DialogContent>
 			</Dialog>
 
-			<CardContent className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap'>
+			<CardContent
+				onClick={() => openTaskDetail(task)}
+				className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap'>
 				{task.content && <p>{task.content}</p>}
 				{task.link && (
 					<Button variant='link' className='px-0'>

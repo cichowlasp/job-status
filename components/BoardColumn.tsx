@@ -37,6 +37,7 @@ interface BoardColumnProps {
 	tasks: Task[];
 	isOverlay?: boolean;
 	columns: Column[];
+	openTaskDetail: (task: Task) => void;
 }
 
 export function BoardColumn({
@@ -44,6 +45,7 @@ export function BoardColumn({
 	tasks,
 	isOverlay,
 	columns,
+	openTaskDetail,
 }: BoardColumnProps) {
 	const [edit, setEdit] = useState(false);
 	const [columnName, setColumnName] = useState(column.title);
@@ -214,7 +216,11 @@ export function BoardColumn({
 				<CardContent className='flex flex-grow flex-col gap-2 p-2'>
 					<SortableContext items={tasksIds}>
 						{tasks.map((task) => (
-							<TaskCard key={task.id} task={task} />
+							<TaskCard
+								key={task.id}
+								task={task}
+								openTaskDetail={openTaskDetail}
+							/>
 						))}
 					</SortableContext>
 				</CardContent>

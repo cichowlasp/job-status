@@ -25,9 +25,11 @@ import { supabase } from '@/utils/supabase/useSupabase';
 export function KanbanBoard({
 	tasks,
 	columns: tempColumns,
+	openTaskDetail,
 }: {
 	tasks: Task[];
 	columns: Column[];
+	openTaskDetail: (task: Task) => void;
 }) {
 	const [columns, setColumns] = useState<Column[]>(tempColumns);
 	const pickedUpTaskColumn = useRef<ColumnId | null>(null);
@@ -192,6 +194,7 @@ export function KanbanBoard({
 						<BoardColumn
 							key={col.id}
 							column={col}
+							openTaskDetail={openTaskDetail}
 							columns={columns}
 							tasks={tasks.filter(
 								(task) => task.columnId === col.id
@@ -208,13 +211,20 @@ export function KanbanBoard({
 							<BoardColumn
 								isOverlay
 								column={activeColumn}
+								openTaskDetail={openTaskDetail}
 								columns={columns}
 								tasks={tasks.filter(
 									(task) => task.columnId === activeColumn.id
 								)}
 							/>
 						)}
-						{activeTask && <TaskCard task={activeTask} isOverlay />}
+						{activeTask && (
+							<TaskCard
+								openTaskDetail={openTaskDetail}
+								task={activeTask}
+								isOverlay
+							/>
+						)}
 					</DragOverlay>,
 					document.body
 				)}

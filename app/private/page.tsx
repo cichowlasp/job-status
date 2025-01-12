@@ -216,7 +216,11 @@ export default function PrivatePage() {
 
 			{view === 'Board' ? (
 				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
-					<KanbanBoard tasks={tasks} columns={board} />
+					<KanbanBoard
+						tasks={tasks}
+						openTaskDetail={openTaskDetail}
+						columns={board}
+					/>
 				</div>
 			) : null}
 			{view === 'List' ? (
