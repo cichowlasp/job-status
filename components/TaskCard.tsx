@@ -145,7 +145,7 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 			<CardHeader
 				{...attributes}
 				{...listeners}
-				className='px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative'>
+				className='px-3 py-3 space-between hover:cursor-grab flex flex-row border-b-2 border-secondary relative'>
 				<span className='mr-auto my-auto'> {task.jobTitle}</span>
 			</CardHeader>
 			<DropdownMenu>
@@ -218,7 +218,7 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 
 			<CardContent
 				onClick={() => openTaskDetail(task)}
-				className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap'>
+				className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap hover:cursor-pointer'>
 				{task.content && <p>{task.content}</p>}
 				{task.link && (
 					<Button variant='link' className='px-0'>

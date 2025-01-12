@@ -48,6 +48,7 @@ export function TaskList({ tasks, board, openTaskDetail }: TaskListProps) {
 				<TableBody>
 					{tasks.map((task) => (
 						<TableRow
+							className='cursor-pointer '
 							onClick={() => openTaskDetail(task)}
 							key={task.id}>
 							<TableCell>{task.jobTitle}</TableCell>
