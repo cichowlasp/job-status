@@ -41,10 +41,6 @@ export default function RegisterPage() {
 		signup(values);
 	};
 
-	const onLogin = () => {
-		router.push('/login');
-	};
-
 	return (
 		<div className='l max-h-[calc(100%-4rem)] max-w-full w-full h-full flex justify-center items-center'>
 			<Card className='w-[350px]'>
