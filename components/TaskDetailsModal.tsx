@@ -1,3 +1,5 @@
+'use client';
+
 import type { Task } from './TaskCard';
 import {
 	Dialog,
@@ -22,6 +24,9 @@ import { supabase } from '@/utils/supabase/useSupabase';
 import { Textarea } from './ui/textarea';
 import { Input } from './ui/input';
 import { FormLabel } from './ui/form';
+import { Link as LinkIcon } from 'lucide-react';
+import Link from 'next/link';
+import { use } from 'react';
 
 interface TaskDetailModalProps {
 	task: Task;
@@ -36,10 +41,12 @@ export function TaskDetailModal({
 }: TaskDetailModalProps) {
 	return (
 		<Dialog open={true} onOpenChange={onClose}>
-			<DialogContent className='md:w-[50%] w-[90%]'>
+			<DialogContent
+				onOpenAutoFocus={(e) => e.preventDefault()}
+				className='md:w-[50%] w-[90%]'>
 				<DialogHeader>
-					<DialogTitle className='text-left'>
-						<DialogDescription className='text-left'>
+					<DialogTitle autoFocus={false} className='text-left'>
+						<DialogDescription className='text-left ml-3'>
 							Manage your task
 						</DialogDescription>
 						<Input
@@ -60,7 +67,7 @@ export function TaskDetailModal({
 					</DialogTitle>
 				</DialogHeader>
 				<div className='flex items-center gap-2'>
-					<span className='font-semibold'>Column:</span>
+					<span className='font-semibold ml-3'>Column:</span>
 					<Select
 						defaultValue={
 							columns.find((col) => col.id === task.columnId)
@@ -93,6 +100,30 @@ export function TaskDetailModal({
 							</SelectGroup>
 						</SelectContent>
 					</Select>
+				</div>
+				<div className='flex gap-2 justify-center items-center'>
+					<Input
+						onChange={async (event) => {
+							const { error } = await supabase
+								.from('tasks')
+								.update({
+									link: event.target.value,
+								})
+								.eq('id', task.id);
+							if (error) {
+								console.error(error);
+							}
+						}}
+						defaultValue={task.link}
+					/>
+
+					<Button variant='secondary' asChild size='icon'>
+						<Link
+							href={task?.link ? task.link : '#'}
+							target={task?.link ? '_blank' : ''}>
+							<LinkIcon />
+						</Link>
+					</Button>
 				</div>
 				<div>
 					<Textarea

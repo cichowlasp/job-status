@@ -14,22 +14,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-	DialogClose,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/utils/supabase/useSupabase';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from './auth-provider';
+import { useRouter } from 'next/navigation';
 
 export interface Task {
 	id: UniqueIdentifier;
@@ -81,7 +69,7 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 	});
 
 	const auth = useAuth();
-	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+	const router = useRouter();
 	const [taskData, setTaskData] = useState<TaskData>({
 		jobTitle: task.jobTitle,
 		link: task.link,
@@ -154,67 +142,19 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuItem
+						onClick={() =>
+							router.push(`private/?taskId=${task.id}`, undefined)
+						}>
+						<Pencil className='mr-2 h-4 w-4' />
+						Edit task
+					</DropdownMenuItem>
+					<DropdownMenuItem
 						onClick={async () => await deleteTask(task.id)}>
 						<Trash className='mr-2 h-4 w-4' />
 						Delete
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-						<Pencil className='mr-2 h-4 w-4' />
-						Edit task
-					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-
-			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-				<DialogContent className='sm:max-w-[425px]'>
-					<DialogHeader>
-						<DialogTitle>Edit task</DialogTitle>
-						<DialogDescription>
-							Fill in the details to change task informations.
-						</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit} className='space-y-4'>
-						<div className='space-y-2'>
-							<Label htmlFor='jobTitle'>Task name</Label>
-							<Input
-								id='jobTitle'
-								name='jobTitle'
-								value={taskData.jobTitle}
-								onChange={handleInputChange}
-								placeholder='Enter job title'
-							/>
-						</div>
-						<div className='space-y-2'>
-							<Label htmlFor='link'>Link</Label>
-							<Input
-								id='link'
-								name='link'
-								value={taskData.link}
-								onChange={handleInputChange}
-								placeholder='Enter link (optional)'
-							/>
-						</div>
-						<div className='space-y-2'>
-							<Label htmlFor='content'>Content</Label>
-							<Textarea
-								id='content'
-								name='content'
-								value={taskData.content}
-								onChange={handleInputChange}
-								placeholder='Enter task content (optional)'
-								rows={4}
-							/>
-						</div>
-						<DialogFooter>
-							<DialogClose className='w-full' asChild>
-								<Button className='w-full' type='submit'>
-									Save changes
-								</Button>
-							</DialogClose>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</Dialog>
 
 			<CardContent
 				onClick={() => openTaskDetail(task)}

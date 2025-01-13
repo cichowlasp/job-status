@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { KanbanBoard } from '@/components/KanbanBoard';
 import { type Task } from '@/components/TaskCard';
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from '@/components/auth-provider';
 import Loading from '@/components/Loading';
@@ -22,8 +22,8 @@ import { NewTaskDialog } from '@/components/NewTaskDialog';
 import { NewColumnDialog } from '@/components/NewColumnDialog';
 import { subscribeBoard, subscribeTasks, subscribeView } from './actions';
 import { TaskList } from '@/components/List';
-import { set } from 'zod';
 import { TaskDetailModal } from '@/components/TaskDetailsModal';
+import { set } from 'zod';
 
 export interface Column {
 	id: string;
@@ -58,17 +58,10 @@ export default function PrivatePage() {
 			.eq('user_id', auth.user?.id);
 		if (error) {
 			console.error(error);
-		} else {
-			setTasks(() => data as Task[]);
-			const taskId = searchParams.get('taskId');
-			if (taskId) {
-				const task = data.find((t: Task) => t.id == taskId);
-				if (task) {
-					setSelectedTask(task);
-				}
-			}
+			return;
 		}
-	}, [auth.user?.id, setTasks]);
+		setTasks(data as Task[]);
+	}, [auth.user?.id]);
 
 	const fetchBoard = useCallback(async () => {
 		if (!auth.user?.id) return;
@@ -121,6 +114,16 @@ export default function PrivatePage() {
 			supabase.removeChannel(viewChannel);
 		};
 	}, [auth.user?.id]);
+
+	useEffect(() => {
+		const taskId = searchParams.get('taskId');
+		if (taskId) {
+			const task = tasks.find((t: Task) => t.id == taskId);
+			if (task) {
+				setSelectedTask(task);
+			}
+		}
+	}, [searchParams, tasks]);
 
 	const openTaskDetail = (task: Task) => {
 		setSelectedTask(task);
