@@ -1,13 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from './actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { loginSchema } from './schema';
-
 import {
 	Form,
 	FormControl,
@@ -24,13 +23,22 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Loading from '@/components/Loading';
+import { EmailConfirmationModal } from '@/components/email-confirmation-modal';
 
 export default function LoginPage() {
 	const [loading, setLading] = useState(false);
-
+	const [email, setEmail] = useState<string | null>(null);
+	const searchParams = useSearchParams();
 	const router = useRouter();
+
+	useEffect(() => {
+		const param = searchParams.get('email');
+		if (param) {
+			setEmail(param);
+		}
+	}, [searchParams, setEmail]);
 
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
@@ -112,6 +120,16 @@ export default function LoginPage() {
 					</Form>
 				</CardContent>
 			</Card>
+			{email && (
+				<EmailConfirmationModal
+					mail={email}
+					isOpen={!!email}
+					onClose={() => {
+						router.push('/login');
+						setEmail(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

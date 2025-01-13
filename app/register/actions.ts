@@ -35,5 +35,5 @@ export async function signup({
 	}
 
 	revalidatePath('/register', 'layout');
-	redirect('/login');
+	redirect(`/login/${email}`);
 }

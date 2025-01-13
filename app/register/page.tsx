@@ -127,7 +127,6 @@ export default function RegisterPage() {
 												{...field}
 											/>
 										</FormControl>
-
 										<FormMessage />
 									</FormItem>
 								)}
