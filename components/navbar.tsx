@@ -23,7 +23,7 @@ function Navbar() {
 		<nav className='w-full max-w-full overflow-hidden h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
 			<Button className='pl-0' variant='link'>
 				<Link className='text-xl' href={!data?.user ? '/' : 'private'}>
-					Job status
+					Task list
 				</Link>
 			</Button>
 			<div className='flex gap-4'>

@@ -23,10 +23,8 @@ import {
 import { supabase } from '@/utils/supabase/useSupabase';
 import { Textarea } from './ui/textarea';
 import { Input } from './ui/input';
-import { FormLabel } from './ui/form';
 import { Link as LinkIcon } from 'lucide-react';
 import Link from 'next/link';
-import { use } from 'react';
 
 interface TaskDetailModalProps {
 	task: Task;
