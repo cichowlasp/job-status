@@ -1,6 +1,7 @@
 # Task list
 
-Asana like application with supabase backend to manage your tasks
+Asana like application with supabase backend to manage your tasks.
+
 Live demo: [https://job-status.vercel.app/](https://job-status.vercel.app/)
 
 ## Getting Started
