@@ -21,8 +21,10 @@ function Navbar() {
 
 	return (
 		<nav className='w-full max-w-full overflow-hidden h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
-			<Button className='pl-0' variant='link'>
-				<Link className='text-xl' href={!data?.user ? '/' : 'private'}>
+			<Button asChild variant='link'>
+				<Link
+					className='text-xl'
+					href={!data?.user?.id ? '/' : 'private'}>
 					Task list
 				</Link>
 			</Button>
@@ -30,14 +32,14 @@ function Navbar() {
 				{!data?.user ? (
 					<>
 						<div className='hidden sm:flex gap-4'>
-							<Button variant='outline'>
+							<Button variant='secondary'>
 								<Link
 									className='text-md min-w-16'
 									href='/login'>
 									Login
 								</Link>
 							</Button>
-							<Button>
+							<Button variant='default'>
 								<Link
 									className='text-md min-w-16'
 									href='/register'>
@@ -77,7 +79,7 @@ function Navbar() {
 					<div>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button>
+								<Button aria-label='user'>
 									<CircleUserRound className='mr-2 h-4 w-4' />
 									{data.user.user_metadata['name']}
 								</Button>

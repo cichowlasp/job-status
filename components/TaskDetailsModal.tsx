@@ -115,7 +115,11 @@ export function TaskDetailModal({
 						defaultValue={task.link}
 					/>
 
-					<Button variant='secondary' asChild size='icon'>
+					<Button
+						variant='secondary'
+						aria-label='link'
+						asChild
+						size='icon'>
 						<Link
 							href={task?.link ? task.link : '#'}
 							target={task?.link ? '_blank' : ''}>

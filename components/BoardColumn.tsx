@@ -146,12 +146,14 @@ export function BoardColumn({
 							<Button
 								type='submit'
 								variant='default'
+								aria-label='submit'
 								className='ml-3 my-auto h-fit w-2 rounded'>
 								<Check />
 							</Button>
 							<AlertDialog>
 								<AlertDialogTrigger asChild>
 									<Button
+										aria-label='delete'
 										variant='destructive'
 										className='ml-2 my-auto h-fit w-2 rounded '>
 										<Trash />
@@ -207,6 +209,7 @@ export function BoardColumn({
 						setEdit((prev) => !prev);
 					}}
 					variant='ghost'
+					aria-label='edit'
 					className='ml-auto my-auto  h-8 w-2'>
 					<Pencil />
 				</Button>

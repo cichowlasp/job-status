@@ -161,11 +161,16 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 				className='px-3 pt-3 pb-6 text-left whitespace-pre-wrap hover:cursor-pointer'>
 				{task.content && <p>{task.content}</p>}
 				{task.link && (
-					<Button variant='link' className='px-0'>
-						<Linkicon className='h-[1rem] w-[1rem]' />
-						<Link className='pl-2' target='_blank' href={task.link}>
-							Link
-						</Link>
+					<Button variant='link' asChild>
+						<div>
+							<Linkicon className='h-[1rem] w-[1rem]' />
+							<Link
+								className='pl-2'
+								target='_blank'
+								href={task.link}>
+								Link
+							</Link>
+						</div>
 					</Button>
 				)}
 			</CardContent>
