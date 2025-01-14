@@ -112,6 +112,7 @@ export function TaskDetailModal({
 								console.error(error);
 							}
 						}}
+						placeholder='https://example-site.com'
 						defaultValue={task.link}
 					/>
 
