@@ -32,12 +32,8 @@ import { useView } from './view-provider';
 export function UserOptions() {
 	const { theme, setTheme } = useTheme();
 	const auth = useAuth();
-	const {
-		view,
-
-		setIsNewDialogOpen,
-		setIsColumnDialogOpen,
-	} = useView();
+	const { view, setView, setIsNewDialogOpen, setIsColumnDialogOpen } =
+		useView();
 	return (
 		<>
 			<div className='flex items-center justify-between mt-6 lg:mt-0'>
@@ -78,6 +74,12 @@ export function UserOptions() {
 					className='grid w-full grid-cols-2 gap-2'>
 					<ToggleGroupItem
 						onClick={async (event) => {
+							setView(
+								(event.target as HTMLElement).innerText ===
+									'Board'
+									? 'Board'
+									: 'List'
+							);
 							const { error } = await supabase
 								.from('view')
 								.update({
@@ -98,6 +100,12 @@ export function UserOptions() {
 					<ToggleGroupItem
 						value='List'
 						onClick={async (event) => {
+							setView(
+								(event.target as HTMLElement).innerText ===
+									'Board'
+									? 'Board'
+									: 'List'
+							);
 							const { error } = await supabase
 								.from('view')
 								.update({
