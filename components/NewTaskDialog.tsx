@@ -79,7 +79,9 @@ export const NewTaskDialog = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild></DialogTrigger>
-			<DialogContent className='sm:max-w-[425px]'>
+			<DialogContent
+				onOpenAutoFocus={(e) => e.preventDefault()}
+				className='sm:max-w-[425px] w-[90%]'>
 				<DialogHeader>
 					<DialogTitle>Create New Task</DialogTitle>
 					<DialogDescription>

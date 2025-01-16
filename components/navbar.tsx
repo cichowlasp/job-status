@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from './auth-provider';
 import { signOut } from '@/utils/supabase/useSupabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 function Navbar() {
 	const data = useAuth();
 	const router = useRouter();
+	const pathName = usePathname();
 
 	return (
 		<nav className='w-full max-w-full overflow-hidden h-16 bg-background border-accent-foreground-foreground border-b-2 flex items-center px-6 justify-between'>
@@ -77,39 +78,43 @@ function Navbar() {
 					</>
 				) : (
 					<div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button aria-label='user'>
-									<CircleUserRound className='mr-2 h-4 w-4' />
-									{data.user.user_metadata['name']}
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align='end'>
-								<DropdownMenuItem
-									className=''
-									onClick={async () => {
-										await signOut();
-									}}>
-									<Button variant='link'>
-										<LogOut className='mr-2 h-4 w-4' />
-										Logout
-									</Button>
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									className=''
-									onClick={async () => {
-										router.push('/private');
-									}}>
-									<Button variant='link'>
-										<ClipboardList className='mr-2 h-4 w-4' />
-										My Tasks
-									</Button>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+						{!(pathName === '/private') && (
+							<>
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button aria-label='user'>
+											<CircleUserRound className='mr-2 h-4 w-4' />
+											{data.user.user_metadata['name']}
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent align='end'>
+										<DropdownMenuItem
+											className=''
+											onClick={async () => {
+												await signOut();
+											}}>
+											<Button variant='link'>
+												<LogOut className='mr-2 h-4 w-4' />
+												Logout
+											</Button>
+										</DropdownMenuItem>
+										<DropdownMenuItem
+											className=''
+											onClick={async () => {
+												router.push('/private');
+											}}>
+											<Button variant='link'>
+												<ClipboardList className='mr-2 h-4 w-4' />
+												My Tasks
+											</Button>
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+								<ThemeSwitcher />
+							</>
+						)}
 					</div>
 				)}
-				<ThemeSwitcher />
 			</div>
 		</nav>
 	);
