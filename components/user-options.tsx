@@ -27,18 +27,17 @@ import { useTheme } from 'next-themes';
 import { signOut, supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useView } from './view-provider';
 
-export function UserOptions({
-	view,
-	setIsNewDialogOpen,
-	setIsColumnDialogOpen,
-}: {
-	view: 'Board' | 'List';
-	setIsNewDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	setIsColumnDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+export function UserOptions() {
 	const { theme, setTheme } = useTheme();
 	const auth = useAuth();
+	const {
+		view,
+
+		setIsNewDialogOpen,
+		setIsColumnDialogOpen,
+	} = useView();
 	return (
 		<>
 			<div className='flex items-center justify-between mt-6 lg:mt-0'>

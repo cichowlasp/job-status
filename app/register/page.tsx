@@ -25,8 +25,6 @@ import {
 import { registerSchema } from './schema';
 
 export default function RegisterPage() {
-	const router = useRouter();
-
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {

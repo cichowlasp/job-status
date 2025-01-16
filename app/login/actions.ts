@@ -1,6 +1,8 @@
 'use client';
 
 import { z } from 'zod';
+
+import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { loginSchema } from './schema';
 
@@ -15,6 +17,10 @@ export async function login(values: z.infer<typeof loginSchema>) {
 	};
 
 	const { error } = await supabase.auth.signInWithPassword(data);
+	if (error) {
+		console.error(error);
+		redirect('/error');
+	}
 
-	return error;
+	redirect('/private');
 }

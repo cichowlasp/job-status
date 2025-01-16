@@ -7,19 +7,12 @@ import React, {
 	useEffect,
 	useCallback,
 } from 'react';
-import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/useSupabase';
-import Loading from './Loading';
 import { useAuth } from './auth-provider';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { Task } from './TaskCard';
 import { Column } from '@/app/private/layout';
-import {
-	subscribeBoard,
-	subscribeTasks,
-	subscribeView,
-} from '@/app/private/actions';
+import { subscribeBoard, subscribeTasks, subscribeView } from '@/utils/actions';
 
 interface ViewProviderProps {
 	children: React.ReactNode;

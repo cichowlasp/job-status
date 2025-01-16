@@ -32,7 +32,6 @@ export default function PrivatePage({
 }>) {
 	const auth = useAuth();
 	const {
-		view,
 		loading,
 		setIsNewDialogOpen,
 		setIsColumnDialogOpen,
@@ -52,11 +51,7 @@ export default function PrivatePage({
 	return (
 		<section className='px-6 lg:pl-0 py-0 h-[calc(100%-4rem)] max-h-[calc(100%-4rem)] overflow-hidden flex relative'>
 			<div className='mr-6 p-6 flex-col hidden lg:flex h-full md:w-64 max-h-full items-center bg-background border-r'>
-				<UserOptions
-					setIsNewDialogOpen={setIsNewDialogOpen}
-					setIsColumnDialogOpen={setIsColumnDialogOpen}
-					view={view}
-				/>
+				<UserOptions />
 			</div>
 			{auth?.user?.id && (
 				<>
@@ -95,11 +90,7 @@ export default function PrivatePage({
 							</DrawerDescription>
 						</DrawerHeader>
 					</VisuallyHidden>
-					<UserOptions
-						setIsNewDialogOpen={setIsNewDialogOpen}
-						setIsColumnDialogOpen={setIsColumnDialogOpen}
-						view={view}
-					/>
+					<UserOptions />
 				</DrawerContent>
 			</Drawer>
 		</section>

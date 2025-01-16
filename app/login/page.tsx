@@ -50,11 +50,7 @@ export default function LoginPage() {
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
 		setLading(true);
-		const error = await login(values);
-		if (error) {
-			router.push('/error');
-		}
-		router.push('/private');
+		await login(values);
 	};
 
 	return (
