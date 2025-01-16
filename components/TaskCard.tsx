@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cva } from 'class-variance-authority';
-import { Link as Linkicon, Pencil, Trash } from 'lucide-react';
+import { Copy, Link as Linkicon, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import {
 	DropdownMenu,
@@ -147,6 +147,20 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 						}>
 						<Pencil className='mr-2 h-4 w-4' />
 						Edit task
+					</DropdownMenuItem>
+					<DropdownMenuItem
+						onClick={async () => {
+							const { id, ...duplicatedTask } = task;
+							const { error } = await supabase
+								.from('tasks')
+								.insert({ ...duplicatedTask })
+								.eq('user_id', auth.user?.id);
+							if (error) {
+								console.log(error);
+							}
+						}}>
+						<Copy className='mr-2 h-4 w-4' />
+						Duplicate task
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						onClick={async () => await deleteTask(task.id)}>
