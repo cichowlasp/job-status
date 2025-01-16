@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { Task as TaskData } from './TaskCard';
 import { supabase } from '@/utils/supabase/useSupabase';
-import type { Column } from '@/app/private/page';
+import type { Column } from '@/app/private/layout';
 
 export const NewTaskDialog = ({
 	open,

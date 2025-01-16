@@ -10,7 +10,7 @@ import {
 	DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Column } from '@/app/private/page';
+import { Column } from '@/app/private/layout';
 import {
 	Select,
 	SelectContent,

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BoardColumn, BoardContainer } from './BoardColumn';
@@ -17,7 +19,7 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { type Task, TaskCard } from './TaskCard';
-import type { Column } from '@/app/private/page';
+import type { Column } from '@/app/private/layout';
 import { hasDraggableData } from './utils';
 import { coordinateGetter } from './multipleContainersKeyboardPreset';
 import { supabase } from '@/utils/supabase/useSupabase';

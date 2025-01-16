@@ -96,29 +96,6 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 		console.log(response);
 	};
 
-	const handleInputChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		setTaskData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
-	};
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		// Here you would typically send the data to your backend
-		console.log('Submitted task data:', taskData);
-		const { error } = await supabase
-			.from('tasks')
-			.update({ ...taskData, user_id: auth?.user?.id })
-			.eq('id', task.id);
-		if (error) {
-			console.error(error);
-		}
-	};
-
 	return (
 		<Card
 			ref={setNodeRef}

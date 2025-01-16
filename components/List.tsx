@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Task as TaskData } from '@/components/TaskCard';
-import type { Column } from '@/app/private/page';
+import type { Column } from '@/app/private/layout';
 import type { Task } from '@/components/TaskCard';
 import { Link } from 'lucide-react';
 

@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/utils/supabase/useSupabase';
-import type { Column } from '@/app/private/page';
+import type { Column } from '@/app/private/layout';
 
 export const NewColumnDialog = ({
 	open,

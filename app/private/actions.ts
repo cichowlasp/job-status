@@ -1,6 +1,6 @@
 import { supabase } from '@/utils/supabase/useSupabase';
 import type { Task } from '@/components/TaskCard';
-import type { Column } from './page';
+import type { Column } from './layout';
 
 export const subscribeTasks = (
 	setTasks: React.Dispatch<React.SetStateAction<Task[]>>,

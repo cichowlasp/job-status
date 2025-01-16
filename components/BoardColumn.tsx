@@ -6,7 +6,7 @@ import { Task, TaskCard } from './TaskCard';
 import { cva } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
-import type { Column } from '@/app/private/page';
+import type { Column } from '@/app/private/layout';
 import { Button } from './ui/button';
 import { Pencil, Check, Trash } from 'lucide-react';
 import { Input } from './ui/input';
