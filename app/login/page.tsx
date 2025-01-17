@@ -24,7 +24,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import Loading from '@/components/loading';
+import Loading from '@/components/loading-animation';
 import { EmailConfirmationModal } from '@/components/email-confirmation-modal';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle } from '@/components/ui/alert';

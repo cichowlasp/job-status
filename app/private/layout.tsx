@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/components/auth-provider';
-import Loading from '@/components/loading';
+import Loading from '@/components/loading-animation';
 import { ChevronUp } from 'lucide-react';
 import { NewTaskDialog } from '@/components/new-task-dialog';
 import { NewColumnDialog } from '@/components/new-column-dialog';
