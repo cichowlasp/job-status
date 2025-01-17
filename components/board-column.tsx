@@ -99,6 +99,15 @@ export function BoardColumn({
 	};
 
 	const deleteColumn = async () => {
+		if (tasks.length === 0) {
+			const { error } = await supabase
+				.from('kanban_columns')
+				.delete()
+				.eq('id', column.id);
+			if (error) {
+				console.error(error);
+			}
+		}
 		const leftColumns = columns.filter((el) => el.id !== column.id);
 		let itemsProcessed = 0;
 		tasks.forEach(async (task) => {
@@ -183,6 +192,7 @@ export function BoardColumn({
 										</AlertDialogCancel>
 										<AlertDialogAction
 											onClick={async () => {
+												console.log('delete');
 												await deleteColumn();
 											}}
 											className={buttonVariants({
