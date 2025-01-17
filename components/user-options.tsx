@@ -32,8 +32,13 @@ import { useView } from './view-provider';
 export function UserOptions() {
 	const { theme, setTheme } = useTheme();
 	const auth = useAuth();
-	const { view, setView, setIsNewDialogOpen, setIsColumnDialogOpen } =
-		useView();
+	const {
+		view,
+		setView,
+		setIsNewDialogOpen,
+		setIsColumnDialogOpen,
+		setMobileMenu,
+	} = useView();
 	return (
 		<>
 			<div className='flex items-center justify-between mt-6 lg:mt-0'>
@@ -50,13 +55,19 @@ export function UserOptions() {
 						align='center'
 						className='w-56 rounded-xl p-2'>
 						<DropdownMenuItem
-							onClick={() => setIsNewDialogOpen(true)}
+							onClick={() => {
+								setIsNewDialogOpen(true);
+								setMobileMenu(false);
+							}}
 							className='flex items-center gap-2 rounded-lg px-2 py-1.5'>
 							<ClipboardList className='h-4 w-4' />
 							<span>Task</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem
-							onClick={() => setIsColumnDialogOpen(true)}
+							onClick={() => {
+								setIsColumnDialogOpen(true);
+								setMobileMenu(false);
+							}}
 							className='flex items-center gap-2 rounded-lg px-2 py-1.5'>
 							<Columns3 className='h-4 w-4' />
 							<span>Column</span>
