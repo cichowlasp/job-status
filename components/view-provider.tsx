@@ -10,7 +10,7 @@ import React, {
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Task } from './TaskCard';
+import { Task } from './task-card';
 import { Column } from '@/app/private/layout';
 import { subscribeBoard, subscribeTasks, subscribeView } from '@/utils/actions';
 

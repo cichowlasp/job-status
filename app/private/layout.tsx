@@ -1,11 +1,11 @@
 'use client';
 
 import { useAuth } from '@/components/auth-provider';
-import Loading from '@/components/Loading';
+import Loading from '@/components/loading';
 import { ChevronUp } from 'lucide-react';
-import { NewTaskDialog } from '@/components/NewTaskDialog';
-import { NewColumnDialog } from '@/components/NewColumnDialog';
-import { TaskDetailModal } from '@/components/TaskDetailsModal';
+import { NewTaskDialog } from '@/components/new-task-dialog';
+import { NewColumnDialog } from '@/components/new-column-dialog';
+import { TaskDetailModal } from '@/components/task-details-modal';
 import {
 	Drawer,
 	DrawerContent,

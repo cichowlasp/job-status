@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BoardColumn, BoardContainer } from './BoardColumn';
+import { BoardColumn, BoardContainer } from './board-column';
 import {
 	DndContext,
 	type DragEndEvent,
@@ -18,10 +18,10 @@ import {
 	MouseSensor,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
-import { type Task, TaskCard } from './TaskCard';
+import { type Task, TaskCard } from './task-card';
 import type { Column } from '@/app/private/layout';
 import { hasDraggableData } from './utils';
-import { coordinateGetter } from './multipleContainersKeyboardPreset';
+import { coordinateGetter } from './multiple-containers-keyboard-preset';
 import { supabase } from '@/utils/supabase/useSupabase';
 
 export function KanbanBoard({

@@ -9,9 +9,9 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import type { Task as TaskData } from '@/components/TaskCard';
+import type { Task as TaskData } from '@/components/task-card';
 import type { Column } from '@/app/private/layout';
-import type { Task } from '@/components/TaskCard';
+import type { Task } from '@/components/task-card';
 import { Link } from 'lucide-react';
 
 import {

@@ -1,5 +1,5 @@
 import { supabase } from '@/utils/supabase/useSupabase';
-import type { Task } from '@/components/TaskCard';
+import type { Task } from '@/components/task-card';
 import type { Column } from '@/app/private/layout';
 
 export const subscribeTasks = (

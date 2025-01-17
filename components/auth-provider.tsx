@@ -3,7 +3,7 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/useSupabase';
-import Loading from './Loading';
+import Loading from './loading';
 
 interface AuthProviderProps {
 	children: React.ReactNode;

@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { Task as TaskData } from './TaskCard';
+import type { Task as TaskData } from './task-card';
 import { supabase } from '@/utils/supabase/useSupabase';
 import type { Column } from '@/app/private/layout';
 

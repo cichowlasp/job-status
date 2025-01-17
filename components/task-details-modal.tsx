@@ -1,6 +1,6 @@
 'use client';
 
-import type { Task } from './TaskCard';
+import type { Task } from './task-card';
 import {
 	Dialog,
 	DialogContent,

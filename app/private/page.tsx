@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { KanbanBoard } from '@/components/KanbanBoard';
-import { TaskList } from '@/components/List';
+import { KanbanBoard } from '@/components/kanban-board';
+import { TaskList } from '@/components/list-view';
 import { useView } from '@/components/view-provider';
 
 const Page = () => {
