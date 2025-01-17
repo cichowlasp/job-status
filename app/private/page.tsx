@@ -11,23 +11,27 @@ const Page = () => {
 	switch (view) {
 		case 'Board':
 			return (
-				<div className='w-full flex justify-center items-center pt-12 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
-					<KanbanBoard
-						tasks={tasks}
-						openTaskDetail={openTaskDetail}
-						columns={board}
-					/>
-				</div>
+				<>
+					<div className='w-full h-dvh flex justify-center items-center overflow-y-auto no-scrollbar'>
+						<KanbanBoard
+							tasks={tasks}
+							openTaskDetail={openTaskDetail}
+							columns={board}
+						/>
+					</div>
+				</>
 			);
 		case 'List':
 			return (
-				<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
-					<TaskList
-						tasks={tasks}
-						board={board}
-						openTaskDetail={openTaskDetail}
-					/>
-				</div>
+				<>
+					<div className='w-full py-3 h-[calc(100%-2rem)] overflow-y-auto no-scrollbar'>
+						<TaskList
+							tasks={tasks}
+							board={board}
+							openTaskDetail={openTaskDetail}
+						/>
+					</div>
+				</>
 			);
 	}
 };

@@ -23,8 +23,12 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { registerSchema } from './schema';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { useState } from 'react';
 
 export default function RegisterPage() {
+	const [error, setError] = useState<string>();
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
@@ -40,15 +44,34 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className='l max-h-[calc(100%-4rem)] max-w-full w-full h-full flex justify-center items-center'>
-			<Card className='w-[350px]'>
-				<CardHeader>
+		<div className='min-h-[100dvh] flex items-center justify-center py-4'>
+			<Card className=' w-[90%] md:w-[500px] h-fit mx-auto'>
+				<CardHeader className='space-y-4'>
 					<CardTitle>Sign up</CardTitle>
 					<CardDescription>
-						Sign up and start managing your jobs status
+						Sign up and start planning your job :{')'}
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
+					<Alert
+						variant='destructive'
+						className={`${
+							error
+								? 'opacity-100 h-fit mb-4'
+								: 'opacity-0 max-h-0'
+						} transition-all`}>
+						<AlertCircle
+							className={`${
+								error ? 'h-4 w-4' : 'h-0 w-0'
+							} transition-all`}
+						/>
+						<AlertTitle
+							className={`${
+								error ? 'h-fit mb-0' : 'hidden max-h-0'
+							} transition-all`}>
+							{error}
+						</AlertTitle>
+					</Alert>
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}

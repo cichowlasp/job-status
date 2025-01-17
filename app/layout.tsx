@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
-import Navbar from '@/components/navbar';
 import { AuthProvider } from '@/components/auth-provider';
 import { ViewProvider } from '@/components/view-provider';
 
@@ -34,10 +33,7 @@ export default function RootLayout({
 					defaultTheme='system'
 					enableSystem>
 					<AuthProvider>
-						<ViewProvider>
-							<Navbar />
-							{children}
-						</ViewProvider>
+						<ViewProvider>{children}</ViewProvider>
 					</AuthProvider>
 				</ThemeProvider>
 			</body>

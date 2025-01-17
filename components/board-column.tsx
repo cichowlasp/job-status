@@ -77,7 +77,7 @@ export function BoardColumn({
 	};
 
 	const variants = cva(
-		'h-[70vh] max-h-[70vh] w-[270px] sm:w-[350px] lg:w-[375px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
+		'h-full w-[270px] sm:w-[350px] lg:w-[375px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center',
 		{
 			variants: {
 				dragging: {
@@ -235,7 +235,7 @@ export function BoardColumn({
 export function BoardContainer({ children }: { children: React.ReactNode }) {
 	const dndContext = useDndContext();
 
-	const variations = cva('flex pb-4', {
+	const variations = cva('flex', {
 		variants: {
 			dragging: {
 				default: 'snap-x snap-mandatory',
@@ -249,7 +249,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
 			className={variations({
 				dragging: dndContext.active ? 'active' : 'default',
 			})}>
-			<div className='min-h-[70vh] flex gap-4 h-full w-full items-center sm:justify-center flex-row'>
+			<div className='flex gap-4 h-[80dvh] w-full items-center sm:justify-center flex-row'>
 				{children}
 			</div>
 			<ScrollBar orientation='horizontal' />

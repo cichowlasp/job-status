@@ -26,10 +26,13 @@ import {
 import { useState, useEffect } from 'react';
 import Loading from '@/components/loading';
 import { EmailConfirmationModal } from '@/components/email-confirmation-modal';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 
 export default function LoginPage() {
 	const [loading, setLading] = useState(false);
 	const [email, setEmail] = useState<string | null>(null);
+	const [error, setError] = useState<string>();
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
@@ -50,20 +53,44 @@ export default function LoginPage() {
 
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
 		setLading(true);
-		await login(values);
+		const error = await login(values);
+		if (error) {
+			console.log(error);
+			setError(error.message);
+		}
+		setLading(false);
 	};
 
 	return (
-		<div className='w-full max-h-[calc(100%-4rem)] h-full max-w-full flex justify-center items-center'>
-			<Card className='w-[350px]'>
-				<CardHeader>
+		<div className='w-full h-[100dvh] max-w-full flex justify-center items-center'>
+			<Card className='w-[90%] md:w-[500px] '>
+				<CardHeader className='space-y-4'>
 					<CardTitle>Login</CardTitle>
 					<CardDescription>
-						Login and start managing your job status
+						Login and start planning your job :{')'}
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<Form {...form}>
+						<Alert
+							variant='destructive'
+							className={`${
+								error
+									? 'opacity-100 h-fit mb-4'
+									: 'opacity-0 max-h-0'
+							} transition-all`}>
+							<AlertCircle
+								className={`${
+									error ? 'h-4 w-4' : 'h-0 w-0'
+								} transition-all`}
+							/>
+							<AlertTitle
+								className={`${
+									error ? 'h-fit mb-0' : 'hidden max-h-0'
+								} transition-all`}>
+								{error}
+							</AlertTitle>
+						</Alert>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
 							className='space-y-8'>

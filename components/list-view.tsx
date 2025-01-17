@@ -81,7 +81,11 @@ export function TaskList({ tasks, board, openTaskDetail }: TaskListProps) {
 											console.error(error);
 										}
 									}}>
-									<SelectTrigger className='md:w-[150px]  w-[100px] truncate'>
+									<SelectTrigger
+										onClick={(event) =>
+											event.stopPropagation()
+										}
+										className='md:w-[150px]  w-[100px] truncate'>
 										<SelectValue placeholder='Select column' />
 									</SelectTrigger>
 									<SelectContent>

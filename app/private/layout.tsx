@@ -49,7 +49,7 @@ export default function PrivatePage({
 	}
 
 	return (
-		<section className='px-6 lg:pl-0 py-0 h-[calc(100%-4rem)] max-h-[calc(100%-4rem)] overflow-hidden flex relative'>
+		<section className='px-3 md:px-6 lg:pl-0 py-0 h-[100dvh] max-h-[100dvh] flex overflow-hidden relative'>
 			<div className='mr-6 p-6 flex-col hidden lg:flex h-full md:w-64 max-h-full items-center bg-background border-r'>
 				<UserOptions />
 			</div>
@@ -69,7 +69,11 @@ export default function PrivatePage({
 					/>
 				</>
 			)}
-			{children}
+
+			<div className='w-full h-full max-w-full max-h-full overflow-auto'>
+				{children}
+			</div>
+
 			{selectedTask && (
 				<TaskDetailModal
 					task={selectedTask}

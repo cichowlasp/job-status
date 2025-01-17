@@ -73,12 +73,6 @@ export function ViewProvider(props: ViewProviderProps) {
 	const [board, setBoard] = useState<Column[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		if (!auth.user) {
-			router.push('/login'); // Redirect to login page if user is not authenticated
-		}
-	}, [auth.user, router]);
-
 	const fetchTasks = useCallback(async () => {
 		if (!auth.user?.id) return;
 		const { data, error } = await supabase

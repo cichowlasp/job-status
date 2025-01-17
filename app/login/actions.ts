@@ -18,8 +18,7 @@ export async function login(values: z.infer<typeof loginSchema>) {
 
 	const { error } = await supabase.auth.signInWithPassword(data);
 	if (error) {
-		console.error(error);
-		redirect('/error');
+		return error;
 	}
 
 	redirect('/private');
