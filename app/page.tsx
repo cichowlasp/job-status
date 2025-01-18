@@ -1,15 +1,31 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/components/auth-provider';
 
 export default function Home() {
+	const auth = useAuth();
+
+	if (auth?.user?.id) {
+		redirect('/private');
+	}
+
 	return (
 		<main className='bg-background'>
+			<div className='p-4'>
+				<Link href='/' className='text-2xl font-bold mt-4'>
+					Task list
+				</Link>
+			</div>
+
 			<div className='min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden'>
 				<div className='z-10 text-center'>
-					<h1 className='text-4xl font-bold text-foreground mb-2 animate-fade-in-down'>
+					<h2 className='text-4xl font-bold text-foreground mb-2 animate-fade-in-down'>
 						Coming Soon!
-					</h1>
+					</h2>
 					<p className='text-xl text-muted-foreground mb-8 animate-fade-in-up'>
 						Task List landing page is under construction.
 					</p>

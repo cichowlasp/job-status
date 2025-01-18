@@ -12,7 +12,7 @@ const Page = () => {
 		case 'Board':
 			return (
 				<>
-					<div className='w-full h-dvh flex justify-center items-center overflow-y-auto no-scrollbar'>
+					<div className='flex justify-center items-center w-full h-[90%] max-h-[100%] overflow-y-auto no-scrollbar place-self-center self-center'>
 						<KanbanBoard
 							tasks={tasks}
 							openTaskDetail={openTaskDetail}

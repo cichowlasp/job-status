@@ -245,7 +245,7 @@ export function BoardColumn({
 export function BoardContainer({ children }: { children: React.ReactNode }) {
 	const dndContext = useDndContext();
 
-	const variations = cva('flex', {
+	const variations = cva('', {
 		variants: {
 			dragging: {
 				default: 'snap-x snap-mandatory',
@@ -259,7 +259,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
 			className={variations({
 				dragging: dndContext.active ? 'active' : 'default',
 			})}>
-			<div className='flex gap-4 h-[80dvh] w-full items-center sm:justify-center flex-row'>
+			<div className='inline-flex gap-4 h-[80dvh] max-h-full w-full items-center sm:justify-center flex-row'>
 				{children}
 			</div>
 			<ScrollBar orientation='horizontal' />

@@ -5,6 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/components/auth-provider';
 import { ViewProvider } from '@/components/view-provider';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
 

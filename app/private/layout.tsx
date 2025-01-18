@@ -70,7 +70,20 @@ export default function PrivatePage({
 				</>
 			)}
 
-			<div className='w-full h-full max-w-full max-h-full overflow-auto'>
+			<div className='w-full h-dvh max-w-full max-h-dvh overflow-auto'>
+				<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3'>
+					<div className='text-sm pt-4 lg:pt-0 font-medium h-fit'>
+						{new Intl.DateTimeFormat('en-US', {
+							weekday: 'short',
+							month: 'long',
+							day: 'numeric',
+						}).format(new Date(Date.now()))}
+					</div>
+					<div className='text-2xl font-bold h-fit'>
+						Hello, {auth.user?.user_metadata['name']}
+					</div>
+				</div>
+
 				{children}
 			</div>
 
