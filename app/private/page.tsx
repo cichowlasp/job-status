@@ -14,7 +14,7 @@ const Page = () => {
 				<>
 					<div className='flex justify-center items-center w-full h-[90%] max-h-[90%] overflow-y-auto no-scrollbar place-self-center self-center'>
 						<KanbanBoard
-							tasks={tasks}
+							tasks={tasks.filter((task) => task.active)}
 							openTaskDetail={openTaskDetail}
 							columns={board}
 						/>
@@ -26,7 +26,7 @@ const Page = () => {
 				<>
 					<div className='w-full mt-6 h-[85%] max-h-[85%] overflow-y-auto no-scrollbar'>
 						<TaskList
-							tasks={tasks}
+							tasks={tasks.filter((task) => task.active)}
 							board={board}
 							openTaskDetail={openTaskDetail}
 						/>

@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cva } from 'class-variance-authority';
-import { Copy, Link as Linkicon, Pencil, Trash } from 'lucide-react';
+import { Archive, Copy, Link as Linkicon, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import {
 	DropdownMenu,
@@ -15,7 +15,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/utils/supabase/useSupabase';
-import { useState } from 'react';
 import { useAuth } from './auth-provider';
 import { useRouter } from 'next/navigation';
 
@@ -42,13 +41,6 @@ export interface TaskDragData {
 	task: Task;
 }
 
-interface TaskData {
-	jobTitle: string;
-	link?: string;
-	content?: string;
-	columnId: string;
-}
-
 export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 	const {
 		setNodeRef,
@@ -70,12 +62,6 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 
 	const auth = useAuth();
 	const router = useRouter();
-	const [taskData, setTaskData] = useState<TaskData>({
-		jobTitle: task.jobTitle,
-		link: task.link,
-		content: task.content,
-		columnId: task.columnId,
-	});
 
 	const style = {
 		transition,
@@ -118,6 +104,21 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 					···
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
+					{task.active && (
+						<DropdownMenuItem
+							onClick={async () => {
+								const error = await supabase
+									.from('tasks')
+									.update({ active: false })
+									.eq('id', task.id);
+								if (error) {
+									console.log(error);
+								}
+							}}>
+							<Archive className='mr-2 h-4 w-4' />
+							Archive
+						</DropdownMenuItem>
+					)}
 					<DropdownMenuItem
 						onClick={() =>
 							router.push(`private/?taskId=${task.id}`, undefined)
@@ -153,7 +154,7 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 				{task.content && <p>{task.content}</p>}
 				{task.link && (
 					<Button variant='link' asChild>
-						<div>
+						<div className='m-0'>
 							<Linkicon className='h-[1rem] w-[1rem]' />
 							<Link
 								className='pl-2'

@@ -22,12 +22,15 @@ import {
 	ChevronDown,
 	ClipboardList,
 	Columns3,
+	Home,
+	Archive,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { signOut, supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useView } from './view-provider';
+import Link from 'next/link';
 
 export function UserOptions() {
 	const { theme, setTheme } = useTheme();
@@ -75,9 +78,7 @@ export function UserOptions() {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-
-			<Separator className='my-6 opacity-50' />
-
+			<Separator className='my-6' />
 			<div className='space-y-4'>
 				<ToggleGroup
 					type='single'
@@ -135,8 +136,27 @@ export function UserOptions() {
 					</ToggleGroupItem>
 				</ToggleGroup>
 			</div>
+			<div>
+				<Link
+					onClick={() => {
+						setMobileMenu(false);
+					}}
+					className='p-4 w-full flex items-center border rounded-xl mt-4 hover:bg-secondary'
+					href={'/private'}>
+					<Home className='h-[1rem] w-[1rem] mx-2' /> Home
+				</Link>
+				<Link
+					onClick={() => {
+						setMobileMenu(false);
+					}}
+					className='p-4 w-full flex items-center border rounded-xl mt-4 hover:bg-secondary'
+					href={'/private/archived'}>
+					<Archive className='h-[1rem] w-[1rem] mx-2' /> Archived
+				</Link>
+			</div>
 
 			<div className='mt-auto space-y-3 lg:mb-0 mb-6'>
+				<Separator className='my-6' />
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button

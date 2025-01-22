@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Task } from './task-card';
 import { Column } from '@/app/private/layout';
 import { subscribeBoard, subscribeTasks, subscribeView } from '@/utils/actions';
@@ -63,6 +63,7 @@ type ViewContextType = {
 export function ViewProvider(props: ViewProviderProps) {
 	const auth = useAuth();
 	const router = useRouter();
+	const path = usePathname();
 	const searchParams = useSearchParams();
 	const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
 	const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
@@ -150,12 +151,13 @@ export function ViewProvider(props: ViewProviderProps) {
 
 	const openTaskDetail = (task: Task) => {
 		setSelectedTask(task);
-		router.push(`private/?taskId=${task.id}`, undefined);
+		console.log(path);
+		router.push(`${path}/?taskId=${task.id}`);
 	};
 
 	const closeTaskDetail = () => {
 		setSelectedTask(null);
-		router.push('/private', undefined);
+		router.push(`${path}/`);
 	};
 
 	const value = {

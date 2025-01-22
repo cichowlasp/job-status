@@ -50,7 +50,7 @@ export default function PrivatePage({
 
 	return (
 		<section className='px-3 md:px-6 lg:pl-0 py-0 h-[100dvh] max-h-[100dvh] flex overflow-hidden relative'>
-			<div className='mr-6 p-6 flex-col hidden lg:flex h-full md:w-64 max-h-full items-center bg-background border-r'>
+			<div className='mr-6 p-6 flex-col hidden lg:inline-flex h-full md:w-64 max-h-full bg-background border-r'>
 				<UserOptions />
 			</div>
 			{auth?.user?.id && (
