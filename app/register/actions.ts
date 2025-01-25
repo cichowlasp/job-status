@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { createClient } from '@/utils/supabase/server';
 import { registerSchema } from './schema';
 
-export async function signup({
+export async function register({
 	email,
 	password,
 	name,
@@ -28,8 +28,7 @@ export async function signup({
 	const { error } = await supabase.auth.signUp(data);
 
 	if (error) {
-		console.error(error);
-		redirect('/error');
+		return error;
 	}
 
 	revalidatePath('/register', 'layout');

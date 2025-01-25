@@ -62,87 +62,95 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div className='w-full h-[100dvh] max-w-full flex justify-center items-center'>
-			<Card className='w-[90%] md:w-[500px] '>
-				<CardHeader className='space-y-4'>
-					<CardTitle>Login</CardTitle>
-					<CardDescription>
-						Login and start planning your job :{')'}
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Form {...form}>
-						<Alert
-							variant='destructive'
-							className={`${
-								error
-									? 'opacity-100 h-fit mb-4'
-									: 'opacity-0 max-h-0'
-							} transition-all`}>
-							<AlertCircle
-								className={`${
-									error ? 'h-4 w-4' : 'h-0 w-0'
-								} transition-all`}
-							/>
-							<AlertTitle
-								className={`${
-									error ? 'h-fit mb-0' : 'hidden max-h-0'
-								} transition-all`}>
-								{error}
-							</AlertTitle>
-						</Alert>
-						<form
-							onSubmit={form.handleSubmit(onSubmit)}
-							className='space-y-8'>
-							<FormField
-								control={form.control}
-								name='email'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className='capitalize'>
-											{field.name}
-										</FormLabel>
-										<FormControl>
-											<Input
-												autoComplete='email'
-												placeholder={field.name}
-												{...field}
-											/>
-										</FormControl>
+		<main className='min-h-[100dvh] bg-background flex flex-col'>
+			<nav className='p-6 border-b'>
+				<a
+					href='/'
+					className='text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 text-transparent bg-clip-text'>
+					Task list
+				</a>
+			</nav>
 
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name='password'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className='capitalize'>
-											{field.name}
-										</FormLabel>
-										<FormControl>
-											<Input
-												autoComplete='current-password'
-												type='password'
-												placeholder={field.name}
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<div className='flex justify-between gap-6'>
-								<Button className='w-full' type='submit'>
-									{loading ? <Loading /> : 'Login'}
+			<div className='flex-1 flex items-center justify-center p-6'>
+				<Card className='w-[90%] md:w-[400px] shadow-lg'>
+					<CardHeader className='space-y-3 text-center'>
+						<CardTitle className='text-2xl font-bold'>
+							Welcome back
+						</CardTitle>
+						<CardDescription>
+							Enter your credentials to continue
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Form {...form}>
+							<Alert
+								variant='destructive'
+								className={`${
+									error
+										? 'opacity-100 h-fit mb-4'
+										: 'opacity-0 h-0 overflow-hidden'
+								} transition-all duration-200`}>
+								<AlertCircle className='h-4 w-4' />
+								<AlertTitle>{error}</AlertTitle>
+							</Alert>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className='space-y-6'>
+								<FormField
+									control={form.control}
+									name='email'
+									render={({ field }) => (
+										<FormItem className='space-y-1.5'>
+											<FormLabel>Email address</FormLabel>
+											<FormControl>
+												<Input
+													autoComplete='email'
+													placeholder='name@example.com'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='password'
+									render={({ field }) => (
+										<FormItem className='space-y-1.5'>
+											<FormLabel>Password</FormLabel>
+											<FormControl>
+												<Input
+													autoComplete='current-password'
+													type='password'
+													placeholder='••••••••'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<Button
+									className='w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground'
+									type='submit'>
+									{loading ? <Loading /> : 'Sign in'}
 								</Button>
-							</div>
-						</form>
-					</Form>
-				</CardContent>
-			</Card>
+							</form>
+						</Form>
+						<div className='mt-6 text-center'>
+							<p className='text-sm text-muted-foreground'>
+								Don&apos;t have an account?{' '}
+								<a
+									href='/register'
+									className='text-primary hover:text-primary/90 font-medium'>
+									Create account
+								</a>
+							</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
 			{email && (
 				<EmailConfirmationModal
 					mail={email}
@@ -153,6 +161,6 @@ export default function LoginPage() {
 					}}
 				/>
 			)}
-		</div>
+		</main>
 	);
 }

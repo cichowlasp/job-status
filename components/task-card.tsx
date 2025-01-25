@@ -17,6 +17,8 @@ import {
 import { supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 
 export interface Task {
 	id: UniqueIdentifier;
@@ -26,6 +28,7 @@ export interface Task {
 	jobTitle: string;
 	user_id: string;
 	active: boolean;
+	dueDate?: Date;
 }
 
 interface TaskCardProps {
@@ -97,28 +100,36 @@ export function TaskCard({ task, isOverlay, openTaskDetail }: TaskCardProps) {
 				{...attributes}
 				{...listeners}
 				className='px-3 py-3 space-between hover:cursor-grab flex flex-row border-b-2 border-secondary relative'>
-				<span className='mr-auto my-auto'> {task.jobTitle}</span>
+				<div className='flex flex-col gap-1'>
+					<span className='mr-auto'>{task.jobTitle}</span>
+					{task.dueDate && (
+						<div className='flex items-center gap-2 text-xs text-muted-foreground'>
+							<CalendarIcon className='h-3 w-3' />
+							<span>
+								{format(new Date(task.dueDate), 'MMM d, yyyy')}
+							</span>
+						</div>
+					)}
+				</div>
 			</CardHeader>
 			<DropdownMenu>
 				<DropdownMenuTrigger className='absolute right-4 top-2'>
 					···
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					{task.active && (
-						<DropdownMenuItem
-							onClick={async () => {
-								const error = await supabase
-									.from('tasks')
-									.update({ active: false })
-									.eq('id', task.id);
-								if (error) {
-									console.log(error);
-								}
-							}}>
-							<Archive className='mr-2 h-4 w-4' />
-							Archive
-						</DropdownMenuItem>
-					)}
+					<DropdownMenuItem
+						onClick={async () => {
+							const { error } = await supabase
+								.from('tasks')
+								.update({ active: !task.active })
+								.eq('id', task.id);
+							if (error) {
+								console.log(error);
+							}
+						}}>
+						<Archive className='mr-2 h-4 w-4' />
+						{task.active ? 'Archive' : 'Unarchive'}
+					</DropdownMenuItem>
 					<DropdownMenuItem
 						onClick={() =>
 							router.push(`private/?taskId=${task.id}`, undefined)

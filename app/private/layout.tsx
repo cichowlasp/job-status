@@ -87,7 +87,7 @@ export default function PrivatePage({
 							Hello, {auth.user?.user_metadata['name']}
 						</div>
 					</div>
-					<div className='text-2xl font-bold mt-6 capitalize'>
+					<div className='text-2xl font-bold mt-6 pr-2 capitalize'>
 						{pathHeading === 'private' ? 'Home' : pathHeading}
 					</div>
 				</div>

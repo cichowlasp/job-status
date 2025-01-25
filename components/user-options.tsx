@@ -32,9 +32,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useView } from './view-provider';
 import Link from 'next/link';
 
+// Add this import at the top with other imports
+import { usePathname } from 'next/navigation';
+
 export function UserOptions() {
 	const { theme, setTheme } = useTheme();
 	const auth = useAuth();
+	const pathname = usePathname();
 	const {
 		view,
 		setView,
@@ -141,7 +145,11 @@ export function UserOptions() {
 					onClick={() => {
 						setMobileMenu(false);
 					}}
-					className='p-4 w-full flex items-center border rounded-xl mt-4 hover:bg-secondary'
+					className={`p-4 w-full flex items-center border rounded-xl mt-4 transition-all duration-200 ${
+						pathname === '/private'
+							? 'bg-primary/10 text-primary border-primary/20'
+							: 'hover:bg-secondary'
+					}`}
 					href={'/private'}>
 					<Home className='h-[1rem] w-[1rem] mx-2' /> Home
 				</Link>
@@ -149,7 +157,11 @@ export function UserOptions() {
 					onClick={() => {
 						setMobileMenu(false);
 					}}
-					className='p-4 w-full flex items-center border rounded-xl mt-4 hover:bg-secondary'
+					className={`p-4 w-full flex items-center border rounded-xl mt-4 transition-all duration-200 ${
+						pathname === '/private/archived'
+							? 'bg-primary/10 text-primary border-primary/20'
+							: 'hover:bg-secondary'
+					}`}
 					href={'/private/archived'}>
 					<Archive className='h-[1rem] w-[1rem] mx-2' /> Archived
 				</Link>
