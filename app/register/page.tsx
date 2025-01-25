@@ -91,10 +91,10 @@ export default function RegisterPage() {
 									name='name'
 									render={({ field }) => (
 										<FormItem className='space-y-1.5'>
-											<FormLabel>Full name</FormLabel>
+											<FormLabel>Name</FormLabel>
 											<FormControl>
 												<Input
-													placeholder='John Doe'
+													placeholder='John'
 													{...field}
 												/>
 											</FormControl>
