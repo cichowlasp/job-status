@@ -17,6 +17,7 @@ import {
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { UserOptions } from '@/components/user-options';
 import { useView } from '@/components/view-provider';
+import { usePathname } from 'next/navigation';
 
 export interface Column {
 	id: string;
@@ -31,6 +32,8 @@ export default function PrivatePage({
 	children: React.ReactNode;
 }>) {
 	const auth = useAuth();
+	const pathname = usePathname();
+	const pathHeading = pathname.split('/').slice(-1)[0];
 	const {
 		loading,
 		setIsNewDialogOpen,
@@ -71,19 +74,23 @@ export default function PrivatePage({
 			)}
 
 			<div className='w-full h-dvh max-w-full max-h-dvh overflow-auto'>
-				<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3'>
-					<div className='text-sm pt-4 lg:pt-0 font-medium h-fit'>
-						{new Intl.DateTimeFormat('en-US', {
-							weekday: 'short',
-							month: 'long',
-							day: 'numeric',
-						}).format(new Date(Date.now()))}
+				<div className='flex items-center justify-between'>
+					<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3'>
+						<div className='text-sm pt-4 lg:pt-0 font-medium h-fit'>
+							{new Intl.DateTimeFormat('en-US', {
+								weekday: 'short',
+								month: 'long',
+								day: 'numeric',
+							}).format(new Date(Date.now()))}
+						</div>
+						<div className='text-2xl font-bold h-fit'>
+							Hello, {auth.user?.user_metadata['name']}
+						</div>
 					</div>
-					<div className='text-2xl font-bold h-fit'>
-						Hello, {auth.user?.user_metadata['name']}
+					<div className='text-2xl font-bold mt-6 capitalize'>
+						{pathHeading === 'private' ? 'Home' : pathHeading}
 					</div>
 				</div>
-
 				{children}
 			</div>
 
