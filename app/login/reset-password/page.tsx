@@ -92,8 +92,8 @@ export default function ResetPasswordPage() {
 						{success ? (
 							<Alert className='bg-primary/10 text-primary border-primary/20'>
 								<AlertTitle>Check your email</AlertTitle>
-								We've sent you a password reset link. Please
-								check your inbox.
+								We&apos;ve sent you a password reset link.
+								Please check your inbox.
 							</Alert>
 						) : (
 							<Form {...form}>
