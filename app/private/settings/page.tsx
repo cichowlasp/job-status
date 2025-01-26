@@ -55,9 +55,6 @@ export default function SettingsPage() {
 			const fileExt = file.name.split('.').pop();
 			const filePath = `${auth?.user?.id}/${auth?.user?.id}.${fileExt}`;
 
-			// Remove existing file if it exists
-			await supabase.storage.from('avatars').remove([filePath]);
-
 			// Upload new file
 			const { error } = await supabase.storage
 				.from('avatars')
@@ -73,6 +70,8 @@ export default function SettingsPage() {
 			const { data } = supabase.storage
 				.from('avatars')
 				.getPublicUrl(filePath);
+
+			console.log(data.publicUrl);
 
 			setAvatarUrl(data.publicUrl);
 		} catch (error) {

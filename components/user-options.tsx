@@ -222,7 +222,11 @@ export function UserOptions() {
 							variant='ghost'
 							className='w-full justify-start gap-3 rounded-xl px-4 py-6 text-base hover:bg-primary/5'>
 							<Avatar className='h-9 w-9 border-2 border-primary/20'>
-								<AvatarImage src='/' />
+								<AvatarImage
+									src={
+										auth?.user?.user_metadata['avatar_url']
+									}
+								/>
 								<AvatarFallback>
 									{auth?.user?.user_metadata['name'][0]}
 								</AvatarFallback>

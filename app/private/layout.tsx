@@ -18,6 +18,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { UserOptions } from '@/components/user-options';
 import { useView } from '@/components/view-provider';
 import { usePathname } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export interface Column {
 	id: string;
@@ -75,16 +76,26 @@ export default function PrivatePage({
 
 			<div className='w-full h-dvh max-w-full max-h-dvh overflow-auto'>
 				<div className='flex items-center justify-between'>
-					<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3'>
-						<div className='text-sm pt-4 lg:pt-0 font-medium h-fit'>
-							{new Intl.DateTimeFormat('en-US', {
-								weekday: 'short',
-								month: 'long',
-								day: 'numeric',
-							}).format(new Date(Date.now()))}
-						</div>
-						<div className='text-2xl font-bold h-fit'>
-							Hello, {auth.user?.user_metadata['name']}
+					<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3 flex items-center gap-4'>
+						<Avatar className='h-12 w-12 border border-primary/20'>
+							<AvatarImage
+								src={auth.user?.user_metadata['avatar_url']}
+							/>
+							<AvatarFallback>
+								{auth.user?.user_metadata['name']?.[0]}
+							</AvatarFallback>
+						</Avatar>
+						<div className='flex flex-col'>
+							<div className='text-2xl font-bold'>
+								Hello, {auth.user?.user_metadata['name']}
+							</div>
+							<div className='text-sm font-medium text-muted-foreground'>
+								{new Intl.DateTimeFormat('en-US', {
+									weekday: 'short',
+									month: 'long',
+									day: 'numeric',
+								}).format(new Date(Date.now()))}
+							</div>
 						</div>
 					</div>
 					<div className='text-2xl font-bold mt-6 pr-2 capitalize'>
