@@ -76,7 +76,7 @@ export default function PrivatePage({
 
 			<div className='w-full h-dvh max-w-full max-h-dvh overflow-auto'>
 				<div className='flex items-center justify-between'>
-					<div className='mt-2 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3 flex items-center gap-4'>
+					<div className='mt-6 md:mt-6 h-14 max-h-16 lg:pl-0 pl-3 flex items-center gap-4'>
 						<Avatar className='h-12 w-12 border border-primary/20'>
 							<AvatarImage
 								src={auth.user?.user_metadata['avatar_url']}
