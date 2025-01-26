@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
-import { CheckCircle2, Layout, ListTodo, Smartphone } from 'lucide-react';
+import { Layout, ListTodo, Smartphone } from 'lucide-react';
 
 export default function Home() {
 	const auth = useAuth();

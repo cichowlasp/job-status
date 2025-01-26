@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { login } from './actions';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { loginSchema } from './schema';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
 import {
 	Form,
 	FormControl,
@@ -16,49 +17,54 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { useState, useEffect } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useState } from 'react';
 import Loading from '@/components/loading-animation';
-import { EmailConfirmationModal } from '@/components/email-confirmation-modal';
-import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import { supabase } from '@/utils/supabase/useSupabase';
+import { useRouter } from 'next/navigation';
 
-export default function LoginPage() {
-	const [loading, setLading] = useState(false);
-	const [email, setEmail] = useState<string | null>(null);
+const updatePasswordSchema = z
+	.object({
+		password: z.string().min(8, 'Password must be at least 8 characters'),
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords don't match",
+		path: ['confirmPassword'],
+	});
+
+export default function UpdatePasswordPage() {
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>();
-	const searchParams = useSearchParams();
 	const router = useRouter();
 
-	useEffect(() => {
-		const param = searchParams.get('email');
-		if (param) {
-			setEmail(param);
-		}
-	}, [searchParams, setEmail]);
-
-	const form = useForm<z.infer<typeof loginSchema>>({
-		resolver: zodResolver(loginSchema),
+	const form = useForm<z.infer<typeof updatePasswordSchema>>({
+		resolver: zodResolver(updatePasswordSchema),
 		defaultValues: {
-			email: '',
 			password: '',
+			confirmPassword: '',
 		},
 	});
 
-	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-		setLading(true);
-		const error = await login(values);
-		if (error) {
-			console.log(error);
+	const onSubmit = async (values: z.infer<typeof updatePasswordSchema>) => {
+		setLoading(true);
+		setError(undefined);
+		try {
+			const { error } = await supabase.auth.updateUser({
+				password: values.password,
+			});
+
+			if (error) throw error;
+			router.push('/login');
+		} catch (error: any) {
 			setError(error.message);
+		} finally {
+			setLoading(false);
 		}
-		setLading(false);
 	};
 
 	return (
@@ -75,10 +81,10 @@ export default function LoginPage() {
 				<Card className='w-[90%] md:w-[400px] shadow-lg'>
 					<CardHeader className='space-y-3 text-center'>
 						<CardTitle className='text-2xl font-bold'>
-							Welcome back
+							Update password
 						</CardTitle>
 						<CardDescription>
-							Enter your credentials to continue
+							Enter your new password below
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -98,14 +104,14 @@ export default function LoginPage() {
 								className='space-y-6'>
 								<FormField
 									control={form.control}
-									name='email'
+									name='password'
 									render={({ field }) => (
 										<FormItem className='space-y-1.5'>
-											<FormLabel>Email address</FormLabel>
+											<FormLabel>New Password</FormLabel>
 											<FormControl>
 												<Input
-													autoComplete='email'
-													placeholder='name@example.com'
+													type='password'
+													placeholder='••••••••'
 													{...field}
 												/>
 											</FormControl>
@@ -115,57 +121,33 @@ export default function LoginPage() {
 								/>
 								<FormField
 									control={form.control}
-									name='password'
+									name='confirmPassword'
 									render={({ field }) => (
 										<FormItem className='space-y-1.5'>
-											<FormLabel>Password</FormLabel>
+											<FormLabel>
+												Confirm Password
+											</FormLabel>
 											<FormControl>
 												<Input
-													autoComplete='current-password'
 													type='password'
 													placeholder='••••••••'
 													{...field}
 												/>
 											</FormControl>
 											<FormMessage />
-											<a
-												href='/login/reset-password'
-												className='text-sm text-primary hover:text-primary/90 inline-block'>
-												Forgot password?
-											</a>
 										</FormItem>
 									)}
 								/>
 								<Button
 									className='w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground'
 									type='submit'>
-									{loading ? <Loading /> : 'Sign in'}
+									{loading ? <Loading /> : 'Update password'}
 								</Button>
 							</form>
 						</Form>
-						<div className='mt-6 text-center'>
-							<p className='text-sm text-muted-foreground'>
-								Don&apos;t have an account?{' '}
-								<a
-									href='/register'
-									className='text-primary hover:text-primary/90 font-medium'>
-									Create account
-								</a>
-							</p>
-						</div>
 					</CardContent>
 				</Card>
 			</div>
-			{email && (
-				<EmailConfirmationModal
-					mail={email}
-					isOpen={!!email}
-					onClose={() => {
-						router.push('/login');
-						setEmail(null);
-					}}
-				/>
-			)}
 		</main>
 	);
 }
