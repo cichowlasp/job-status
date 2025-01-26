@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 97.15 95.61">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 3px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        font-family: MontserratRoman-Bold, Montserrat;
+        font-size: 16.08px;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" x="1.5" y="1.5" width="36.02" height="36.02" rx="1" ry="1"/>
+  <rect class="cls-1" x="1.5" y="58.1" width="36.02" height="36.02" rx="1" ry="1"/>
+  <path class="cls-1" d="M58.1,63.24h36.02"/>
+  <path class="cls-1" d="M58.1,88.97h36.02"/>
+  <text class="cls-2" transform="translate(58.1 14.95)"><tspan x="0" y="0">Task</tspan><tspan x="0" y="19.3">List</tspan></text>
+</svg>

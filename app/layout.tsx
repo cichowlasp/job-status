@@ -5,13 +5,17 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/components/auth-provider';
 import { ViewProvider } from '@/components/view-provider';
-import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'Task List',
 	description: 'Simple task list app',
+	icons: {
+		icon: '/favicon.svg',
+		shortcut: '/favicon.svg',
+		apple: '/favicon.svg',
+	},
 };
 
 export default function RootLayout({
