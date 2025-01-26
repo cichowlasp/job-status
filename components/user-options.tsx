@@ -24,6 +24,8 @@ import {
 	Columns3,
 	Home,
 	Archive,
+	Settings,
+	LogOut,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { signOut, supabase } from '@/utils/supabase/useSupabase';
@@ -31,11 +33,10 @@ import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useView } from './view-provider';
 import Link from 'next/link';
-
-// Add this import at the top with other imports
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export function UserOptions() {
+	const router = useRouter();
 	const { theme, setTheme } = useTheme();
 	const auth = useAuth();
 	const pathname = usePathname();
@@ -244,10 +245,20 @@ export function UserOptions() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator className='my-2 opacity-50' />
 						<DropdownMenuItem
+							onClick={() => {
+								router.push('/private/settings');
+								setMobileMenu(false);
+							}}
+							className='rounded-lg px-2 py-1.5'>
+							<Settings className='mr-2 h-4 w-4' />
+							Settings
+						</DropdownMenuItem>
+						<DropdownMenuItem
 							onClick={async () => {
 								await signOut();
 							}}
 							className='rounded-lg px-2 py-1.5 text-red-500 dark:text-red-400'>
+							<LogOut className='mr-2 h-4 w-4' />
 							Log out
 						</DropdownMenuItem>
 					</DropdownMenuContent>
