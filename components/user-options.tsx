@@ -28,7 +28,7 @@ import {
 	LogOut,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { signOut, supabase } from '@/utils/supabase/useSupabase';
+import { signOutLocal, supabase } from '@/utils/supabase/useSupabase';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useView } from './view-provider';
@@ -259,7 +259,7 @@ export function UserOptions() {
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							onClick={async () => {
-								await signOut();
+								await signOutLocal();
 							}}
 							className='rounded-lg px-2 py-1.5 text-red-500 dark:text-red-400'>
 							<LogOut className='mr-2 h-4 w-4' />
