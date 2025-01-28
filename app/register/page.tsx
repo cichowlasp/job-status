@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { register } from './actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -31,24 +30,30 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 export default function RegisterPage() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>();
-	const router = useRouter();
-
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
 			email: '',
 			password: '',
 			name: '',
+			confirmPassword: '', // Add this line
 		},
 	});
 
 	const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-		setLoading(true);
-		const error = await register(values);
-		if (error) {
-			setError(error.message);
+		console.log(values);
+		try {
+			setError(undefined); // Clear previous errors
+			setLoading(true);
+			const error = await register(values);
+			if (error) {
+				setError(error.message);
+			}
+		} catch (err) {
+			setError('An unexpected error occurred');
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	return (
@@ -137,9 +142,30 @@ export default function RegisterPage() {
 										</FormItem>
 									)}
 								/>
+								<FormField
+									control={form.control}
+									name='confirmPassword'
+									render={({ field }) => (
+										<FormItem className='space-y-1.5'>
+											<FormLabel>
+												Confirm Password
+											</FormLabel>
+											<FormControl>
+												<Input
+													autoComplete='new-password'
+													type='password'
+													placeholder='••••••••'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<Button
 									className='w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground'
-									type='submit'>
+									type='submit'
+									disabled={loading}>
 									{loading ? <Loading /> : 'Create account'}
 								</Button>
 							</form>
