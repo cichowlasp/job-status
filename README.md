@@ -16,7 +16,7 @@ A powerful, Asana-inspired task management application built with Next.js and Su
 
 ## 🚀 Live Demo
 
-Experience Task List in action: [https://job-status.vercel.app/](https://job-status.vercel.app/)
+Experience Task List in action: [https://tasklist.cichowlasp.org/](https://tasklist.cichowlasp.org/)
 
 ![Task Management](./screenshots/task-management.png)
 
